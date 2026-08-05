@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ausonia · Generatore annunci Vinted</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBF3EF;
+    --card:#FFFFFF;
+    --ink:#3A2C30;
+    --wine:#8C2F39;
+    --wine-dark:#6E2029;
+    --rose:#C98A9C;
+    --taupe:#B99C86;
+    --taupe-soft:#EADFD4;
+    --ok:#5C7A5A;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Jost',sans-serif;
+    padding:32px 16px 80px;
+  }
+  .wrap{max-width:920px;margin:0 auto;}
+  header{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:28px;
+    border-bottom:1px solid var(--taupe-soft);
+    padding-bottom:18px;
+  }
+  header h1{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:600;
+    font-size:34px;
+    margin:0;
+    color:var(--wine-dark);
+    letter-spacing:0.3px;
+  }
+  header p{
+    margin:0;
+    font-size:13px;
+    color:var(--taupe);
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+  }
+  .status{
+    font-size:11px;
+    padding:3px 10px;
+    border-radius:20px;
+    background:var(--taupe-soft);
+    color:var(--wine-dark);
+  }
+  .status.ok{background:#DCEBD9;color:var(--ok);}
+  .status.err{background:#F4D9DB;color:var(--wine-dark);}
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:28px;
+  }
+  @media(max-width:760px){.grid{grid-template-columns:1fr;}}
+  .card{
+    background:var(--card);
+    border-radius:4px;
+    padding:24px;
+    border:1px solid var(--taupe-soft);
+  }
+  .card h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:20px;
+    font-weight:600;
+    margin:0 0 16px;
+    color:var(--wine);
+  }
+  label{
+    display:block;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.6px;
+    color:var(--taupe);
+    margin:14px 0 5px;
+  }
+  label:first-of-type{margin-top:0;}
+  select,input,textarea{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--taupe-soft);
+    border-radius:3px;
+    background:#FFFDFB;
+    color:var(--ink);
+    font-family:'Jost',sans-serif;
+    font-size:14px;
+  }
+  select:focus,input:focus,textarea:focus{
+    outline:2px solid var(--rose);
+    outline-offset:1px;
+  }
+  textarea{resize:vertical;min-height:60px;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  button.primary{
+    margin-top:20px;
+    width:100%;
+    background:var(--wine);
+    color:#fff;
+    border:none;
+    padding:13px;
+    font-size:14px;
+    letter-spacing:0.5px;
+    border-radius:3px;
+    cursor:pointer;
+    font-family:'Jost',sans-serif;
+    font-weight:500;
+    transition:background .15s;
+  }
+  button.primary:hover{background:var(--wine-dark);}
+  button.primary:disabled{background:var(--taupe);cursor:not-allowed;}
+  button.ghost{
+    background:none;
+    border:1px solid var(--taupe);
+    color:var(--ink);
+    padding:7px 12px;
+    font-size:12px;
+    border-radius:3px;
+    cursor:pointer;
+    font-family:'Jost',sans-serif;
+  }
+  button.ghost:hover{border-color:var(--wine);color:var(--wine);}
+
+  .tag{
+    position:relative;
+    background:#fff;
+    border:1px solid var(--taupe-soft);
+    border-radius:4px;
+    padding:22px 22px 20px 40px;
+    margin-top:4px;
+  }
+  .tag::before{
+    content:"";
+    position:absolute;
+    left:16px;
+    top:22px;
+    bottom:22px;
+    width:1px;
+    background:repeating-linear-gradient(to bottom, var(--rose) 0 4px, transparent 4px 8px);
+  }
+  .tag::after{
+    content:"";
+    position:absolute;
+    left:10px;
+    top:14px;
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    border:1.5px solid var(--rose);
+    background:var(--bg);
+  }
+  .tag-title{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-weight:600;
+    font-size:20px;
+    color:var(--wine-dark);
+    margin:0 0 10px;
+  }
+  .tag-desc{
+    white-space:pre-wrap;
+    font-size:13.5px;
+    line-height:1.65;
+    color:var(--ink);
+  }
+  .copy-row{
+    display:flex;
+    gap:8px;
+    margin-top:14px;
+    flex-wrap:wrap;
+  }
+  .placeholder{
+    color:var(--taupe);
+    font-size:13px;
+    font-style:italic;
+  }
+  .presets{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-top:10px;
+  }
+  .chip{
+    font-size:11.5px;
+    padding:4px 10px;
+    background:var(--taupe-soft);
+    border-radius:20px;
+    cursor:pointer;
+    color:var(--wine-dark);
+  }
+  .chip:hover{background:var(--rose);color:#fff;}
+  .history{margin-top:22px;}
+  .history h2{margin-bottom:10px;}
+  .hist-item{
+    border-bottom:1px solid var(--taupe-soft);
+    padding:10px 0;
+    font-size:13px;
+  }
+  .hist-item b{color:var(--wine-dark);font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;}
+  .hist-item .meta{color:var(--taupe);font-size:11px;margin-top:2px;}
+  .note{
+    margin-top:30px;
+    font-size:12.5px;
+    color:var(--taupe);
+    line-height:1.6;
+    border-top:1px solid var(--taupe-soft);
+    padding-top:16px;
+  }
+  .toast{
+    position:fixed;
+    bottom:24px;
+    left:50%;
+    transform:translateX(-50%) translateY(20px);
+    background:var(--wine-dark);
+    color:#fff;
+    padding:10px 20px;
+    border-radius:4px;
+    font-size:13px;
+    opacity:0;
+    pointer-events:none;
+    transition:all .25s;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Ausonia — Generatore annunci Vinted</h1>
+      <p>Compila una volta, incolla su Vinted</p>
+    </div>
+    <span class="status" id="status">Connessione al database...</span>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Dati del capo</h2>
+
+      <label>Tipo di capo</label>
+      <select id="tipo">
+        <option>Reggiseno</option>
+        <option>Slip / Culotte</option>
+        <option>Set reggiseno + slip</option>
+        <option>Body</option>
+        <option>Guêpière / Bustino</option>
+        <option>Pigiama</option>
+        <option>Vestaglia / Accappatoio</option>
+        <option>Camicia da notte</option>
+        <option>Costume da bagno</option>
+        <option>Calze / Collant</option>
+        <option>Altro capo intimo</option>
+      </select>
+
+      <div class="row2">
+        <div>
+          <label>Marca</label>
+          <input id="marca" type="text" placeholder="es. Chantelle, Yamamay...">
+        </div>
+        <div>
+          <label>Taglia</label>
+          <input id="taglia" type="text" placeholder="es. 3° / M / 42B">
+        </div>
+      </div>
+
+      <div class="row2">
+        <div>
+          <label>Colore</label>
+          <input id="colore" type="text" placeholder="es. nero, avorio...">
+        </div>
+        <div>
+          <label>Prezzo (€)</label>
+          <input id="prezzo" type="text" placeholder="es. 12">
+        </div>
+      </div>
+
+      <label>Materiale</label>
+      <input id="materiale" type="text" placeholder="es. pizzo, cotone, microfibra...">
+
+      <label>Condizione</label>
+      <select id="condizione">
+        <option>Nuovo con cartellino</option>
+        <option>Nuovo senza cartellino</option>
+        <option>Ottime condizioni</option>
+        <option>Buone condizioni</option>
+        <option>Soddisfacenti condizioni</option>
+      </select>
+
+      <label>Dettagli extra (opzionale)</label>
+      <textarea id="dettagli" placeholder="es. ferretto, coppe imbottite, chiusura frontale, vestibilità..."></textarea>
+
+      <label style="margin-bottom:2px;">Preset marca/materiale salvati</label>
+      <div class="presets" id="presets"><span class="placeholder">Caricamento...</span></div>
+      <div class="copy-row">
+        <button class="ghost" id="savePreset" type="button">＋ Salva marca/materiale come preset</button>
+      </div>
+
+      <button class="primary" id="genera" type="button" disabled>Genera annuncio</button>
+    </div>
+
+    <div class="card">
+      <h2>Anteprima annuncio</h2>
+      <div id="output">
+        <div class="placeholder">Compila i campi a sinistra e premi "Genera annuncio": qui comparirà il titolo e la descrizione pronti da incollare su Vinted.</div>
+      </div>
+
+      <div class="history" id="historyBox" style="display:none;">
+        <h2>Ultimi annunci generati</h2>
+        <div id="historyList"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    Nota: Vinted non offre un'API pubblica per pubblicare annunci automaticamente, quindi il caricamento foto e la conferma finale vanno sempre fatti a mano sull'app/sito — questo strumento serve a farti risparmiare tempo solo sulla parte di scrittura, che è quella più lenta. Preset e cronologia sono condivisi tra tutti i dispositivi che aprono questa pagina.
+  </div>
+</div>
+
+<div class="toast" id="toast">Copiato negli appunti</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBVxhMya5NKtlccr3T2YhM-lqwqKEDwwlY",
+  authDomain: "ausonia-vinted.firebaseapp.com",
+  projectId: "ausonia-vinted",
+  storageBucket: "ausonia-vinted.firebasestorage.app",
+  messagingSenderId: "42803211934",
+  appId: "1:42803211934:web:d67d8d5957ba5ef320558f"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const docRef = doc(db, "shops", "ausonia");
+
+const $ = id => document.getElementById(id);
+
+function toast(msg){
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+function setStatus(text, cls){
+  const s = $('status');
+  s.textContent = text;
+  s.className = 'status' + (cls ? ' ' + cls : '');
+}
+
+function copyText(text){
+  navigator.clipboard.writeText(text).then(()=>toast('Copiato negli appunti'))
+    .catch(()=>toast('Impossibile copiare'));
+}
+
+function slug(s){
+  return s.toLowerCase().replace(/[^a-z0-9à-ù]+/gi,'').trim();
+}
+
+function buildListing(){
+  const tipo = $('tipo').value;
+  const marca = $('marca').value.trim();
+  const taglia = $('taglia').value.trim();
+  const colore = $('colore').value.trim();
+  const materiale = $('materiale').value.trim();
+  const condizione = $('condizione').value;
+  const dettagli = $('dettagli').value.trim();
+  const prezzo = $('prezzo').value.trim();
+
+  let titleParts = [];
+  if(marca) titleParts.push(marca);
+  titleParts.push(tipo);
+  if(colore) titleParts.push(colore);
+  if(taglia) titleParts.push('tg. '+taglia);
+  const title = titleParts.join(' ');
+
+  let desc = `✨ ${tipo}${marca ? ' firmato ' + marca : ''}\n\n`;
+  if(taglia) desc += `📏 Taglia: ${taglia}\n`;
+  if(colore) desc += `🎨 Colore: ${colore}\n`;
+  if(materiale) desc += `🧵 Materiale: ${materiale}\n`;
+  desc += `⭐ Condizione: ${condizione}\n`;
+  if(dettagli) desc += `📌 ${dettagli}\n`;
+  if(prezzo) desc += `\n💶 Prezzo: ${prezzo}€ (trattabile con più acquisti)\n`;
+  desc += `\n📦 Capo controllato e pulito, spedizione curata.\n🙋‍♀️ Scrivimi per altre taglie/colori disponibili in negozio!\n\n`;
+  const tags = ['#intimo','#lingerie','#ausonia', '#'+slug(tipo)];
+  desc += tags.join(' ');
+
+  return {title, desc};
+}
+
+function render(title, desc){
+  $('output').innerHTML = `
+    <div class="tag">
+      <div class="tag-title">${title || '(senza titolo)'}</div>
+      <div class="tag-desc"></div>
+    </div>
+    <div class="copy-row">
+      <button class="ghost" id="copyTitle">Copia titolo</button>
+      <button class="ghost" id="copyDesc">Copia descrizione</button>
+      <button class="ghost" id="copyAll">Copia tutto</button>
+    </div>
+  `;
+  $('output').querySelector('.tag-desc').textContent = desc;
+  $('copyTitle').onclick = () => copyText(title);
+  $('copyDesc').onclick = () => copyText(desc);
+  $('copyAll').onclick = () => copyText(title + '\n\n' + desc);
+}
+
+function renderHistory(history){
+  if(!history || history.length === 0) return;
+  const items = [...history].sort((a,b)=> b.ts - a.ts).slice(0,8);
+  $('historyBox').style.display = 'block';
+  $('historyList').innerHTML = items.map(it => `
+    <div class="hist-item">
+      <b></b>
+      <div class="meta">${it.date}</div>
+    </div>
+  `).join('');
+  const rows = $('historyList').querySelectorAll('.hist-item b');
+  rows.forEach((el, i) => el.textContent = items[i].title);
+}
+
+function renderPresets(presets){
+  const box = $('presets');
+  if(!presets || presets.length === 0){
+    box.innerHTML = '<span class="placeholder">Nessun preset salvato ancora</span>';
+    return;
+  }
+  box.innerHTML = '';
+  presets.forEach(data => {
+    const chip = document.createElement('span');
+    chip.className = 'chip';
+    chip.textContent = `${data.marca}${data.materiale ? ' · ' + data.materiale : ''}`;
+    chip.onclick = () => {
+      $('marca').value = data.marca || '';
+      $('materiale').value = data.materiale || '';
+    };
+    box.appendChild(chip);
+  });
+}
+
+let cache = { presets: [], history: [] };
+
+async function loadData(){
+  try{
+    const snap = await getDoc(docRef);
+    if(snap.exists()){
+      cache = snap.data();
+      cache.presets = cache.presets || [];
+      cache.history = cache.history || [];
+    } else {
+      await setDoc(docRef, { presets: [], history: [] });
+      cache = { presets: [], history: [] };
+    }
+    renderPresets(cache.presets);
+    renderHistory(cache.history);
+    setStatus('Connesso', 'ok');
+    $('genera').disabled = false;
+  }catch(e){
+    console.error(e);
+    setStatus('Database non raggiungibile', 'err');
+    toast('Errore di connessione al database');
+  }
+}
+
+$('genera').onclick = async () => {
+  const {title, desc} = buildListing();
+  render(title, desc);
+  const entry = { title, desc, date: new Date().toLocaleString('it-IT'), ts: Date.now() };
+  try{
+    await updateDoc(docRef, { history: arrayUnion(entry) });
+    cache.history.push(entry);
+    renderHistory(cache.history);
+  }catch(e){ console.error(e); toast('Annuncio generato, ma non salvato in cronologia'); }
+};
+
+$('savePreset').onclick = async () => {
+  const marca = $('marca').value.trim();
+  const materiale = $('materiale').value.trim();
+  if(!marca && !materiale){ toast('Inserisci almeno marca o materiale'); return; }
+  const entry = { marca, materiale, ts: Date.now() };
+  try{
+    await updateDoc(docRef, { presets: arrayUnion(entry) });
+    cache.presets.push(entry);
+    renderPresets(cache.presets);
+    toast('Preset salvato');
+  }catch(e){ console.error(e); toast('Errore salvataggio preset'); }
+};
+
+loadData();
+</script>
+</body>
+</html>
