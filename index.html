@@ -281,8 +281,10 @@
 
       <label style="margin-bottom:2px;">Riconoscimento automatico da foto</label>
       <div class="photo-box">
-        <input type="file" id="photoInput" accept="image/*" hidden>
-        <button class="ghost" id="photoBtn" type="button">📷 Scatta o carica foto</button>
+        <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden>
+        <input type="file" id="galleryInput" accept="image/*" hidden>
+        <button class="ghost" id="cameraBtn" type="button">📷 Scatta foto</button>
+        <button class="ghost" id="galleryBtn" type="button">🖼️ Carica da galleria</button>
         <span id="photoStatus" class="photo-status"></span>
       </div>
       <img id="photoPreview" style="display:none;">
@@ -389,6 +391,7 @@ const docRef = doc(db, "shops", "ausonia");
 
 // Sostituisci con l'URL del tuo Worker Cloudflare dopo averlo pubblicato
 const WORKER_URL = "https://hidden-frost-22ef.palmitessa-paolo.workers.dev";
+const APP_SECRET = "glYH-P70MY2BZ3OlZZRSOtzymjICsbK745CNM_blOzk";
 
 const $ = id => document.getElementById(id);
 
@@ -528,7 +531,7 @@ async function analyzePhoto(file){
     const base64 = await fileToBase64(file);
     const resp = await fetch(WORKER_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'X-App-Secret': APP_SECRET },
       body: JSON.stringify({ image: base64, mimeType: file.type || 'image/jpeg' })
     });
     if(!resp.ok) throw new Error('Risposta non valida dal server');
@@ -550,15 +553,18 @@ async function analyzePhoto(file){
   }
 }
 
-$('photoBtn').onclick = () => $('photoInput').click();
-$('photoInput').onchange = (e) => {
-  const file = e.target.files[0];
+function handlePhotoFile(file){
   if(!file) return;
   const preview = $('photoPreview');
   preview.src = URL.createObjectURL(file);
   preview.style.display = 'block';
   analyzePhoto(file);
-};
+}
+
+$('cameraBtn').onclick = () => $('cameraInput').click();
+$('galleryBtn').onclick = () => $('galleryInput').click();
+$('cameraInput').onchange = (e) => handlePhotoFile(e.target.files[0]);
+$('galleryInput').onchange = (e) => handlePhotoFile(e.target.files[0]);
 
 let cache = { presets: [], history: [] };
 
