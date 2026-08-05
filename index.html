@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ausonia · Generatore annunci Vinted</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="theme-color" content="#8C2F39">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ausonia">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -187,6 +195,27 @@
     font-size:13px;
     font-style:italic;
   }
+  .photo-box{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .photo-status{
+    font-size:12px;
+    color:var(--taupe);
+  }
+  .photo-status.working{color:var(--wine);}
+  .photo-status.ok{color:var(--ok);}
+  .photo-status.err{color:var(--wine-dark);}
+  #photoPreview{
+    width:100%;
+    max-height:220px;
+    object-fit:cover;
+    border-radius:4px;
+    margin-top:10px;
+    border:1px solid var(--taupe-soft);
+  }
   .presets{
     display:flex;
     flex-wrap:wrap;
@@ -249,6 +278,14 @@
   <div class="grid">
     <div class="card">
       <h2>Dati del capo</h2>
+
+      <label style="margin-bottom:2px;">Riconoscimento automatico da foto</label>
+      <div class="photo-box">
+        <input type="file" id="photoInput" accept="image/*" capture="environment" hidden>
+        <button class="ghost" id="photoBtn" type="button">📷 Scatta o carica foto</button>
+        <span id="photoStatus" class="photo-status"></span>
+      </div>
+      <img id="photoPreview" style="display:none;">
 
       <label>Tipo di capo</label>
       <select id="tipo">
@@ -349,6 +386,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const docRef = doc(db, "shops", "ausonia");
+
+// Sostituisci con l'URL del tuo Worker Cloudflare dopo averlo pubblicato
+const WORKER_URL = "https://REPLACE-WITH-YOUR-WORKER.workers.dev";
 
 const $ = id => document.getElementById(id);
 
@@ -455,6 +495,70 @@ function renderPresets(presets){
     box.appendChild(chip);
   });
 }
+
+function setPhotoStatus(text, cls){
+  const el = $('photoStatus');
+  el.textContent = text;
+  el.className = 'photo-status' + (cls ? ' ' + cls : '');
+}
+
+function fileToBase64(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+const VALID_TIPI = [
+  "Reggiseno","Slip / Culotte","Set reggiseno + slip","Body","Guêpière / Bustino",
+  "Pigiama","Vestaglia / Accappatoio","Camicia da notte","Costume da bagno",
+  "Calze / Collant","Altro capo intimo"
+];
+
+async function analyzePhoto(file){
+  if(WORKER_URL.includes("REPLACE-WITH-YOUR-WORKER")){
+    setPhotoStatus('Worker non ancora collegato: vedi istruzioni', 'err');
+    toast('Devi prima pubblicare il Worker e inserire il suo URL nel codice');
+    return;
+  }
+  setPhotoStatus('Analisi della foto in corso...', 'working');
+  try{
+    const base64 = await fileToBase64(file);
+    const resp = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image: base64, mimeType: file.type || 'image/jpeg' })
+    });
+    if(!resp.ok) throw new Error('Risposta non valida dal server');
+    const result = await resp.json();
+    if(result.error) throw new Error(result.error);
+
+    if(result.tipo && VALID_TIPI.includes(result.tipo)) $('tipo').value = result.tipo;
+    if(result.colore) $('colore').value = result.colore;
+    if(result.materiale) $('materiale').value = result.materiale;
+    if(result.dettagli) $('dettagli').value = result.dettagli;
+    if(result.taglia_visibile) $('taglia').value = result.taglia_visibile;
+
+    setPhotoStatus('Campi compilati, controllali prima di generare', 'ok');
+    toast('Foto analizzata');
+  }catch(e){
+    console.error(e);
+    setPhotoStatus('Analisi non riuscita, compila a mano', 'err');
+    toast('Errore nell\'analisi della foto');
+  }
+}
+
+$('photoBtn').onclick = () => $('photoInput').click();
+$('photoInput').onchange = (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const preview = $('photoPreview');
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = 'block';
+  analyzePhoto(file);
+};
 
 let cache = { presets: [], history: [] };
 
