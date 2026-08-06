@@ -575,7 +575,10 @@ async function analyzePhoto(file){
       headers: { 'Content-Type': 'application/json', 'X-App-Secret': APP_SECRET },
       body: JSON.stringify({ image: base64, mimeType: 'image/jpeg' })
     });
-    if(!resp.ok) throw new Error('Risposta non valida dal server');
+    if(!resp.ok){
+      const errBody = await resp.json().catch(()=>({}));
+      throw new Error(errBody.error || ('Errore HTTP ' + resp.status));
+    }
     const result = await resp.json();
     if(result.error) throw new Error(result.error);
 
@@ -589,7 +592,7 @@ async function analyzePhoto(file){
     toast('Foto analizzata');
   }catch(e){
     console.error(e);
-    setPhotoStatus('Analisi non riuscita, compila a mano', 'err');
+    setPhotoStatus('Errore: ' + e.message, 'err');
     toast('Errore nell\'analisi della foto');
   }
 }
