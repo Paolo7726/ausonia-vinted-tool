@@ -292,15 +292,19 @@
       <label>Tipo di capo</label>
       <select id="tipo">
         <option>Reggiseno</option>
-        <option>Slip / Culotte</option>
+        <option>Slip</option>
+        <option>Culotte</option>
         <option>Set reggiseno + slip</option>
         <option>Body</option>
-        <option>Guêpière / Bustino</option>
+        <option>Guêpière</option>
+        <option>Bustino</option>
         <option>Pigiama</option>
-        <option>Vestaglia / Accappatoio</option>
+        <option>Vestaglia</option>
+        <option>Accappatoio</option>
         <option>Camicia da notte</option>
         <option>Costume da bagno</option>
-        <option>Calze / Collant</option>
+        <option>Calze</option>
+        <option>Collant</option>
         <option>Altro capo intimo</option>
       </select>
 
@@ -442,7 +446,10 @@ function buildListing(){
   if(dettagli) desc += `📌 ${dettagli}\n`;
   if(prezzo) desc += `\n💶 Prezzo: ${prezzo}€ (trattabile con più acquisti)\n`;
   desc += `\n📦 Capo controllato e pulito, spedizione curata.\n🙋‍♀️ Scrivimi per altre taglie/colori disponibili in negozio!\n\n`;
-  const tags = ['#intimo','#lingerie','#ausonia', '#'+slug(tipo)];
+  let tags = ['#intimo','#lingerie','#ausonia','#vinted','#secondamano', '#'+slug(tipo)];
+  if(materiale) tags.push('#'+slug(materiale));
+  if(colore) tags.push('#'+slug(colore));
+  if(marca) tags.push('#'+slug(marca));
   desc += tags.join(' ');
 
   return {title, desc};
@@ -549,9 +556,9 @@ function compressImage(file, maxDim = 1280, quality = 0.82){
 }
 
 const VALID_TIPI = [
-  "Reggiseno","Slip / Culotte","Set reggiseno + slip","Body","Guêpière / Bustino",
-  "Pigiama","Vestaglia / Accappatoio","Camicia da notte","Costume da bagno",
-  "Calze / Collant","Altro capo intimo"
+  "Reggiseno","Slip","Culotte","Set reggiseno + slip","Body","Guêpière","Bustino",
+  "Pigiama","Vestaglia","Accappatoio","Camicia da notte","Costume da bagno",
+  "Calze","Collant","Altro capo intimo"
 ];
 
 async function analyzePhoto(file){
