@@ -240,6 +240,19 @@
   }
   .hist-item b{color:var(--wine-dark);font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;}
   .hist-item .meta{color:var(--taupe);font-size:11px;margin-top:2px;}
+  .hist-actions{display:flex;gap:6px;margin-top:8px;}
+  .hist-actions button{
+    font-size:11px;
+    padding:4px 10px;
+    background:none;
+    border:1px solid var(--taupe-soft);
+    border-radius:20px;
+    color:var(--wine-dark);
+    cursor:pointer;
+    font-family:'Jost',sans-serif;
+  }
+  .hist-actions button:hover{border-color:var(--rose);}
+  .hist-actions button.danger:hover{border-color:var(--wine);color:var(--wine);}
   .note{
     margin-top:30px;
     font-size:12.5px;
@@ -290,7 +303,8 @@
       <img id="photoPreview" style="display:none;">
 
       <label>Tipo di capo</label>
-      <select id="tipo">
+      <input list="tipoList" id="tipo" value="Reggiseno" placeholder="Scegli dalla lista o scrivi un tipo qualsiasi">
+      <datalist id="tipoList">
         <option>Reggiseno</option>
         <option>Slip</option>
         <option>Culotte</option>
@@ -306,7 +320,7 @@
         <option>Calze</option>
         <option>Collant</option>
         <option>Altro capo intimo</option>
-      </select>
+      </datalist>
 
       <div class="row2">
         <div>
@@ -377,7 +391,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-  getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion
+  getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -398,6 +412,12 @@ const WORKER_URL = "https://hidden-frost-22ef.palmitessa-paolo.workers.dev";
 const APP_SECRET = "glYH-P70MY2BZ3OlZZRSOtzymjICsbK745CNM_blOzk";
 
 const $ = id => document.getElementById(id);
+
+function autoGrow(el){
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+$('dettagli').addEventListener('input', function(){ autoGrow(this); });
 
 function toast(msg){
   const t = $('toast');
@@ -474,17 +494,71 @@ function render(title, desc){
 }
 
 function renderHistory(history){
-  if(!history || history.length === 0) return;
+  if(!history || history.length === 0){ $('historyBox').style.display = 'none'; return; }
   const items = [...history].sort((a,b)=> b.ts - a.ts).slice(0,8);
   $('historyBox').style.display = 'block';
-  $('historyList').innerHTML = items.map(it => `
-    <div class="hist-item">
-      <b></b>
-      <div class="meta">${it.date}</div>
-    </div>
-  `).join('');
-  const rows = $('historyList').querySelectorAll('.hist-item b');
-  rows.forEach((el, i) => el.textContent = items[i].title);
+  const list = $('historyList');
+  list.innerHTML = '';
+  items.forEach(entry => {
+    const row = document.createElement('div');
+    row.className = 'hist-item';
+
+    const b = document.createElement('b');
+    b.textContent = entry.title;
+
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    meta.textContent = entry.date;
+
+    const actions = document.createElement('div');
+    actions.className = 'hist-actions';
+
+    const resumeBtn = document.createElement('button');
+    resumeBtn.type = 'button';
+    resumeBtn.textContent = '↺ Riprendi';
+    resumeBtn.onclick = () => resumeListing(entry);
+
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.className = 'danger';
+    delBtn.textContent = '✕ Elimina';
+    delBtn.onclick = () => deleteHistoryItem(entry);
+
+    actions.appendChild(resumeBtn);
+    actions.appendChild(delBtn);
+    row.appendChild(b);
+    row.appendChild(meta);
+    row.appendChild(actions);
+    list.appendChild(row);
+  });
+}
+
+function resumeListing(entry){
+  const f = entry.fields || {};
+  if(f.tipo) $('tipo').value = f.tipo;
+  $('marca').value = f.marca || '';
+  $('taglia').value = f.taglia || '';
+  $('colore').value = f.colore || '';
+  $('prezzo').value = f.prezzo || '';
+  $('materiale').value = f.materiale || '';
+  if(f.condizione) $('condizione').value = f.condizione;
+  $('dettagli').value = f.dettagli || '';
+  autoGrow($('dettagli'));
+  render(entry.title, entry.desc);
+  toast('Annuncio ripreso, puoi modificarlo');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function deleteHistoryItem(entry){
+  try{
+    await updateDoc(docRef, { history: arrayRemove(entry) });
+    cache.history = cache.history.filter(h => h.ts !== entry.ts);
+    renderHistory(cache.history);
+    toast('Eliminato dalla cronologia');
+  }catch(e){
+    console.error(e);
+    toast('Errore durante l\'eliminazione');
+  }
 }
 
 function renderPresets(presets){
@@ -555,12 +629,6 @@ function compressImage(file, maxDim = 1280, quality = 0.82){
   });
 }
 
-const VALID_TIPI = [
-  "Reggiseno","Slip","Culotte","Set reggiseno + slip","Body","Guêpière","Bustino",
-  "Pigiama","Vestaglia","Accappatoio","Camicia da notte","Costume da bagno",
-  "Calze","Collant","Altro capo intimo"
-];
-
 async function analyzePhoto(file){
   if(WORKER_URL.includes("REPLACE-WITH-YOUR-WORKER")){
     setPhotoStatus('Worker non ancora collegato: vedi istruzioni', 'err');
@@ -582,10 +650,10 @@ async function analyzePhoto(file){
     const result = await resp.json();
     if(result.error) throw new Error(result.error);
 
-    if(result.tipo && VALID_TIPI.includes(result.tipo)) $('tipo').value = result.tipo;
+    if(result.tipo) $('tipo').value = result.tipo;
     if(result.colore) $('colore').value = result.colore;
     if(result.materiale) $('materiale').value = result.materiale;
-    if(result.dettagli) $('dettagli').value = result.dettagli;
+    if(result.dettagli){ $('dettagli').value = result.dettagli; autoGrow($('dettagli')); }
     if(result.taglia_visibile) $('taglia').value = result.taglia_visibile;
 
     setPhotoStatus('Campi compilati, controllali prima di generare', 'ok');
@@ -637,7 +705,17 @@ async function loadData(){
 $('genera').onclick = async () => {
   const {title, desc} = buildListing();
   render(title, desc);
-  const entry = { title, desc, date: new Date().toLocaleString('it-IT'), ts: Date.now() };
+  const fields = {
+    tipo: $('tipo').value,
+    marca: $('marca').value,
+    taglia: $('taglia').value,
+    colore: $('colore').value,
+    prezzo: $('prezzo').value,
+    materiale: $('materiale').value,
+    condizione: $('condizione').value,
+    dettagli: $('dettagli').value
+  };
+  const entry = { title, desc, date: new Date().toLocaleString('it-IT'), ts: Date.now(), fields };
   try{
     await updateDoc(docRef, { history: arrayUnion(entry) });
     cache.history.push(entry);
