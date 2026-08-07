@@ -216,32 +216,6 @@
     margin-top:10px;
     border:1px solid var(--taupe-soft);
   }
-  .autocomplete-wrap{ position:relative; }
-  .autocomplete-list{
-    display:none;
-    position:absolute;
-    top:100%;
-    left:0;
-    right:0;
-    z-index:20;
-    background:#fff;
-    border:1px solid var(--taupe-soft);
-    border-top:none;
-    border-radius:0 0 3px 3px;
-    max-height:220px;
-    overflow-y:auto;
-    box-shadow:0 8px 16px rgba(58,44,48,0.12);
-  }
-  .autocomplete-list.open{ display:block; }
-  .autocomplete-list div{
-    padding:10px 12px;
-    font-size:14px;
-    cursor:pointer;
-  }
-  .autocomplete-list div:hover,
-  .autocomplete-list div.active{
-    background:var(--taupe-soft);
-  }
   .presets{
     display:flex;
     flex-wrap:wrap;
@@ -329,10 +303,25 @@
       <img id="photoPreview" style="display:none;">
 
       <label>Tipo di capo</label>
-      <div class="autocomplete-wrap">
-        <input type="text" id="tipo" value="Reggiseno" placeholder="Scegli dalla lista o scrivi un tipo qualsiasi" autocomplete="off">
-        <div class="autocomplete-list" id="tipoSuggestions"></div>
-      </div>
+      <select id="tipoSelect">
+        <option>Reggiseno</option>
+        <option>Slip</option>
+        <option>Culotte</option>
+        <option>Set reggiseno + slip</option>
+        <option>Body</option>
+        <option>Guêpière</option>
+        <option>Bustino</option>
+        <option>Pigiama</option>
+        <option>Vestaglia</option>
+        <option>Accappatoio</option>
+        <option>Camicia da notte</option>
+        <option>Costume da bagno</option>
+        <option>Calze</option>
+        <option>Collant</option>
+        <option>Altro capo intimo</option>
+        <option value="__custom__">✏️ Altro (scrivi tu)</option>
+      </select>
+      <input type="text" id="tipoCustom" placeholder="Scrivi il tipo di capo" style="display:none; margin-top:8px;">
 
       <div class="row2">
         <div>
@@ -454,7 +443,7 @@ function slug(s){
 }
 
 function buildListing(){
-  const tipo = $('tipo').value;
+  const tipo = getTipoValue();
   const marca = $('marca').value.trim();
   const taglia = $('taglia').value.trim();
   const colore = $('colore').value.trim();
@@ -547,7 +536,7 @@ function renderHistory(history){
 
 function resumeListing(entry){
   const f = entry.fields || {};
-  if(f.tipo) $('tipo').value = f.tipo;
+  if(f.tipo) setTipoValue(f.tipo);
   $('marca').value = f.marca || '';
   $('taglia').value = f.taglia || '';
   $('colore').value = f.colore || '';
@@ -598,47 +587,31 @@ function setPhotoStatus(text, cls){
   el.className = 'photo-status' + (cls ? ' ' + cls : '');
 }
 
-const TIPO_SUGGESTIONS = [
-  "Reggiseno","Slip","Culotte","Set reggiseno + slip","Body","Guêpière","Bustino",
-  "Pigiama","Vestaglia","Accappatoio","Camicia da notte","Costume da bagno",
-  "Calze","Collant","Altro capo intimo"
-];
-
-function setupTipoAutocomplete(){
-  const input = $('tipo');
-  const box = $('tipoSuggestions');
-
-  function showList(items){
-    if(items.length === 0){ box.classList.remove('open'); box.innerHTML=''; return; }
-    box.innerHTML = '';
-    items.forEach(txt => {
-      const opt = document.createElement('div');
-      opt.textContent = txt;
-      opt.onmousedown = (e) => {
-        e.preventDefault();
-        input.value = txt;
-        box.classList.remove('open');
-      };
-      box.appendChild(opt);
-    });
-    box.classList.add('open');
-  }
-
-  input.addEventListener('focus', () => {
-    const q = input.value.trim().toLowerCase();
-    const filtered = q ? TIPO_SUGGESTIONS.filter(t => t.toLowerCase().includes(q)) : TIPO_SUGGESTIONS;
-    showList(filtered);
-  });
-  input.addEventListener('input', () => {
-    const q = input.value.trim().toLowerCase();
-    const filtered = q ? TIPO_SUGGESTIONS.filter(t => t.toLowerCase().includes(q)) : TIPO_SUGGESTIONS;
-    showList(filtered);
-  });
-  document.addEventListener('click', (e) => {
-    if(e.target !== input) box.classList.remove('open');
-  });
+function getTipoValue(){
+  const sel = $('tipoSelect').value;
+  return sel === '__custom__' ? $('tipoCustom').value.trim() : sel;
 }
-setupTipoAutocomplete();
+
+function setTipoValue(val){
+  const opts = Array.from($('tipoSelect').options).map(o => o.value);
+  if(opts.includes(val)){
+    $('tipoSelect').value = val;
+    $('tipoCustom').style.display = 'none';
+  } else {
+    $('tipoSelect').value = '__custom__';
+    $('tipoCustom').style.display = 'block';
+    $('tipoCustom').value = val;
+  }
+}
+
+$('tipoSelect').addEventListener('change', () => {
+  if($('tipoSelect').value === '__custom__'){
+    $('tipoCustom').style.display = 'block';
+    $('tipoCustom').focus();
+  } else {
+    $('tipoCustom').style.display = 'none';
+  }
+});
 
 function fileToBase64(file){
   return new Promise((resolve, reject) => {
@@ -704,7 +677,7 @@ async function analyzePhoto(file){
     const result = await resp.json();
     if(result.error) throw new Error(result.error);
 
-    if(result.tipo) $('tipo').value = result.tipo;
+    if(result.tipo) setTipoValue(result.tipo);
     if(result.colore) $('colore').value = result.colore;
     if(result.materiale) $('materiale').value = result.materiale;
     if(result.dettagli){ $('dettagli').value = result.dettagli; autoGrow($('dettagli')); }
@@ -760,7 +733,7 @@ $('genera').onclick = async () => {
   const {title, desc} = buildListing();
   render(title, desc);
   const fields = {
-    tipo: $('tipo').value,
+    tipo: getTipoValue(),
     marca: $('marca').value,
     taglia: $('taglia').value,
     colore: $('colore').value,
