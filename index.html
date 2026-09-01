@@ -509,12 +509,26 @@ function render(title, desc){
   $('duplicateBtn').onclick = () => prepareVariant();
 }
 
-function shareListing(title, desc){
+async function shareListing(title, desc){
   const text = title + '\n\n' + desc;
+
+  // Copia sempre la didascalia negli appunti come rete di sicurezza:
+  // molte app (Instagram compresa) non accettano testo pre-compilato via condivisione.
+  try{ await navigator.clipboard.writeText(text); }catch(e){}
+
   if(navigator.share){
-    navigator.share({ title: title, text: text }).catch(()=>{});
+    if(currentPhotoFile && navigator.canShare && navigator.canShare({ files: [currentPhotoFile] })){
+      try{
+        await navigator.share({ files: [currentPhotoFile], title: title });
+        toast('Foto condivisa, didascalia già copiata: incollala dove serve');
+        return;
+      }catch(e){ /* utente ha annullato o app non supporta i file: proseguo col solo testo */ }
+    }
+    try{
+      await navigator.share({ title: title, text: text });
+      return;
+    }catch(e){ /* utente ha annullato */ }
   } else {
-    copyText(text);
     toast('Condivisione non supportata: testo copiato negli appunti');
   }
 }
@@ -778,8 +792,11 @@ async function analyzePhoto(file){
   }
 }
 
+let currentPhotoFile = null;
+
 function handlePhotoFile(file){
   if(!file) return;
+  currentPhotoFile = file;
   const preview = $('photoPreview');
   preview.src = URL.createObjectURL(file);
   preview.style.display = 'block';
