@@ -227,10 +227,19 @@
     padding:4px 10px;
     background:var(--taupe-soft);
     border-radius:20px;
-    cursor:pointer;
     color:var(--wine-dark);
+    display:inline-flex;
+    align-items:center;
   }
   .chip:hover{background:var(--rose);color:#fff;}
+  .chip span:first-child{ cursor:pointer; }
+  .chip-remove{
+    cursor:pointer;
+    margin-left:5px;
+    opacity:0.6;
+    font-size:11px;
+  }
+  .chip-remove:hover{ opacity:1; }
   .history{margin-top:22px;}
   .history h2{margin-bottom:10px;}
   #historySearch{ margin-bottom:12px; }
@@ -627,11 +636,33 @@ function renderPresets(presets){
   presets.forEach(data => {
     const chip = document.createElement('span');
     chip.className = 'chip';
-    chip.textContent = `${data.marca}${data.materiale ? ' · ' + data.materiale : ''}`;
-    chip.onclick = () => {
+
+    const label = document.createElement('span');
+    label.textContent = `${data.marca}${data.materiale ? ' · ' + data.materiale : ''}`;
+    label.onclick = () => {
       $('marca').value = data.marca || '';
       $('materiale').value = data.materiale || '';
     };
+
+    const removeBtn = document.createElement('span');
+    removeBtn.textContent = ' ✕';
+    removeBtn.className = 'chip-remove';
+    removeBtn.onclick = async (e) => {
+      e.stopPropagation();
+      if(!confirm(`Eliminare il preset "${label.textContent}"?`)) return;
+      try{
+        await updateDoc(docRef, { presets: arrayRemove(data) });
+        cache.presets = cache.presets.filter(p => p.ts !== data.ts);
+        renderPresets(cache.presets);
+        toast('Preset eliminato');
+      }catch(err){
+        console.error(err);
+        toast('Errore durante l\'eliminazione del preset');
+      }
+    };
+
+    chip.appendChild(label);
+    chip.appendChild(removeBtn);
     box.appendChild(chip);
   });
 }
