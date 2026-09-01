@@ -233,6 +233,7 @@
   .chip:hover{background:var(--rose);color:#fff;}
   .history{margin-top:22px;}
   .history h2{margin-bottom:10px;}
+  #historySearch{ margin-bottom:12px; }
   .hist-item{
     border-bottom:1px solid var(--taupe-soft);
     padding:10px 0;
@@ -377,6 +378,7 @@
 
       <div class="history" id="historyBox" style="display:none;">
         <h2>Ultimi annunci generati</h2>
+        <input type="text" id="historySearch" placeholder="🔍 Cerca per marca, tipo, colore...">
         <div id="historyList"></div>
       </div>
     </div>
@@ -486,20 +488,65 @@ function render(title, desc){
       <button class="ghost" id="copyTitle">Copia titolo</button>
       <button class="ghost" id="copyDesc">Copia descrizione</button>
       <button class="ghost" id="copyAll">Copia tutto</button>
+      <button class="ghost" id="shareAll">📤 Condividi</button>
+      <button class="ghost" id="duplicateBtn">🧬 Duplica per variante</button>
     </div>
   `;
   $('output').querySelector('.tag-desc').textContent = desc;
   $('copyTitle').onclick = () => copyText(title);
   $('copyDesc').onclick = () => copyText(desc);
   $('copyAll').onclick = () => copyText(title + '\n\n' + desc);
+  $('shareAll').onclick = () => shareListing(title, desc);
+  $('duplicateBtn').onclick = () => prepareVariant();
+}
+
+function shareListing(title, desc){
+  const text = title + '\n\n' + desc;
+  if(navigator.share){
+    navigator.share({ title: title, text: text }).catch(()=>{});
+  } else {
+    copyText(text);
+    toast('Condivisione non supportata: testo copiato negli appunti');
+  }
+}
+
+function prepareVariant(fields){
+  if(fields){
+    if(fields.tipo) setTipoValue(fields.tipo);
+    $('marca').value = fields.marca || '';
+    $('materiale').value = fields.materiale || '';
+    if(fields.condizione) $('condizione').value = fields.condizione;
+    $('dettagli').value = fields.dettagli || '';
+    autoGrow($('dettagli'));
+    $('prezzo').value = fields.prezzo || '';
+  }
+  $('colore').value = '';
+  $('taglia').value = '';
+  $('output').innerHTML = '<div class="placeholder">Modifica colore/taglia e premi di nuovo "Genera annuncio" per creare la variante.</div>';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(() => $('colore').focus(), 300);
+  toast('Pronto per una nuova variante: modifica colore/taglia');
 }
 
 function renderHistory(history){
   if(!history || history.length === 0){ $('historyBox').style.display = 'none'; return; }
-  const items = [...history].sort((a,b)=> b.ts - a.ts).slice(0,8);
   $('historyBox').style.display = 'block';
+
+  const query = ($('historySearch').value || '').trim().toLowerCase();
+  let items = [...history].sort((a,b)=> b.ts - a.ts);
+  if(query){
+    items = items.filter(e => e.title.toLowerCase().includes(query));
+  }
+  items = items.slice(0, query ? 25 : 8);
+
   const list = $('historyList');
   list.innerHTML = '';
+
+  if(items.length === 0){
+    list.innerHTML = '<div class="placeholder">Nessun annuncio trovato</div>';
+    return;
+  }
+
   items.forEach(entry => {
     const row = document.createElement('div');
     row.className = 'hist-item';
@@ -519,6 +566,11 @@ function renderHistory(history){
     resumeBtn.textContent = '↺ Riprendi';
     resumeBtn.onclick = () => resumeListing(entry);
 
+    const dupBtn = document.createElement('button');
+    dupBtn.type = 'button';
+    dupBtn.textContent = '🧬 Duplica';
+    dupBtn.onclick = () => prepareVariant(entry.fields || {});
+
     const delBtn = document.createElement('button');
     delBtn.type = 'button';
     delBtn.className = 'danger';
@@ -526,6 +578,7 @@ function renderHistory(history){
     delBtn.onclick = () => deleteHistoryItem(entry);
 
     actions.appendChild(resumeBtn);
+    actions.appendChild(dupBtn);
     actions.appendChild(delBtn);
     row.appendChild(b);
     row.appendChild(meta);
@@ -533,6 +586,8 @@ function renderHistory(history){
     list.appendChild(row);
   });
 }
+
+$('historySearch').addEventListener('input', () => renderHistory(cache.history));
 
 function resumeListing(entry){
   const f = entry.fields || {};
