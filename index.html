@@ -27,6 +27,7 @@
     --ok:#5C7A5A;
   }
   *{box-sizing:border-box;}
+  [hidden]{display:none !important;}
   body{
     margin:0;
     background:var(--bg);
@@ -60,6 +61,13 @@
     letter-spacing:0.5px;
     text-transform:uppercase;
   }
+  .hdr-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .user-email{font-size:11px;color:var(--taupe);}
+  .linkbtn{
+    background:none;border:none;padding:0;
+    font-family:'Jost',sans-serif;font-size:11px;
+    color:var(--wine);text-decoration:underline;cursor:pointer;
+  }
   .status{
     font-size:11px;
     padding:3px 10px;
@@ -80,6 +88,7 @@
     border-radius:4px;
     padding:24px;
     border:1px solid var(--taupe-soft);
+    min-width:0;
   }
   .card h2{
     font-family:'Cormorant Garamond',serif;
@@ -88,6 +97,8 @@
     margin:0 0 16px;
     color:var(--wine);
   }
+  .card-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;}
+  .card-head h2{margin-bottom:16px;}
   label{
     display:block;
     font-size:12px;
@@ -96,7 +107,12 @@
     color:var(--taupe);
     margin:14px 0 5px;
   }
-  label:first-of-type{margin-top:0;}
+  label.inline{
+    display:flex;align-items:center;gap:6px;
+    text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--ink);
+    margin:8px 0 0;
+  }
+  label.inline input{width:auto;margin:0;}
   select,input,textarea{
     width:100%;
     padding:10px 12px;
@@ -113,6 +129,7 @@
   }
   textarea{resize:vertical;min-height:60px;}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .hint{font-size:11.5px;color:var(--taupe);margin-top:6px;line-height:1.45;}
   button.primary{
     margin-top:20px;
     width:100%;
@@ -141,6 +158,8 @@
     font-family:'Jost',sans-serif;
   }
   button.ghost:hover{border-color:var(--wine);color:var(--wine);}
+  button.ghost:disabled{opacity:.5;cursor:not-allowed;}
+  button.ghost.accent{border-color:var(--wine);color:var(--wine);font-weight:500;}
 
   .tag{
     position:relative;
@@ -176,14 +195,26 @@
     font-weight:600;
     font-size:20px;
     color:var(--wine-dark);
-    margin:0 0 10px;
+    margin:0 0 4px;
+    overflow-wrap:anywhere;
   }
+  .title-count{font-size:11px;color:var(--taupe);margin-bottom:10px;}
+  .title-count.long{color:var(--wine);}
+  .tag-cat{font-size:12px;color:var(--taupe);margin-bottom:10px;}
   .tag-desc{
     white-space:pre-wrap;
     font-size:13.5px;
     line-height:1.65;
     color:var(--ink);
+    overflow-wrap:anywhere;
   }
+  .listing + .listing{margin-top:22px;padding-top:18px;border-top:1px dashed var(--taupe-soft);}
+  .listings-head{font-size:12.5px;color:var(--wine);margin-bottom:10px;}
+  .ai-title{
+    margin-top:12px;padding:10px 12px;
+    background:#FBF3EF;border-radius:4px;font-size:12.5px;line-height:1.5;
+  }
+  .ai-title b{color:var(--wine-dark);}
   .copy-row{
     display:flex;
     gap:8px;
@@ -204,17 +235,24 @@
   .photo-status{
     font-size:12px;
     color:var(--taupe);
+    margin-top:8px;
+    min-height:1em;
   }
   .photo-status.working{color:var(--wine);}
   .photo-status.ok{color:var(--ok);}
   .photo-status.err{color:var(--wine-dark);}
-  #photoPreview{
-    width:100%;
-    max-height:220px;
-    object-fit:cover;
-    border-radius:4px;
-    margin-top:10px;
-    border:1px solid var(--taupe-soft);
+  .thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+  .thumb{position:relative;width:88px;height:88px;}
+  .thumb img{width:100%;height:100%;object-fit:cover;border-radius:4px;border:1px solid var(--taupe-soft);}
+  .thumb button{
+    position:absolute;top:-6px;right:-6px;
+    width:22px;height:22px;border-radius:50%;
+    border:none;background:var(--wine-dark);color:#fff;
+    font-size:12px;line-height:22px;padding:0;cursor:pointer;
+  }
+  .ai-hint{
+    margin-top:10px;padding:8px 12px;font-size:12px;line-height:1.5;
+    background:#FBF3EF;border-left:2px solid var(--rose);border-radius:2px;
   }
   .presets{
     display:flex;
@@ -241,16 +279,16 @@
   }
   .chip-remove:hover{ opacity:1; }
   .history{margin-top:22px;}
-  .history h2{margin-bottom:10px;}
+  .history .card-head h2{margin-bottom:10px;}
   #historySearch{ margin-bottom:12px; }
   .hist-item{
     border-bottom:1px solid var(--taupe-soft);
     padding:10px 0;
     font-size:13px;
   }
-  .hist-item b{color:var(--wine-dark);font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;}
+  .hist-item b{color:var(--wine-dark);font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;overflow-wrap:anywhere;}
   .hist-item .meta{color:var(--taupe);font-size:11px;margin-top:2px;}
-  .hist-actions{display:flex;gap:6px;margin-top:8px;}
+  .hist-actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
   .hist-actions button{
     font-size:11px;
     padding:4px 10px;
@@ -263,6 +301,11 @@
   }
   .hist-actions button:hover{border-color:var(--rose);}
   .hist-actions button.danger:hover{border-color:var(--wine);color:var(--wine);}
+  details.settings{margin-top:22px;border-top:1px solid var(--taupe-soft);padding-top:14px;}
+  details.settings summary{cursor:pointer;font-size:13px;color:var(--wine);}
+  .login-card{max-width:420px;margin:40px auto;text-align:center;}
+  .login-card p{font-size:13.5px;line-height:1.6;}
+  .login-err{color:var(--wine-dark);font-size:12.5px;min-height:1em;}
   .note{
     margin-top:30px;
     font-size:12.5px;
@@ -284,6 +327,8 @@
     opacity:0;
     pointer-events:none;
     transition:all .25s;
+    max-width:calc(100% - 32px);
+    text-align:center;
   }
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
@@ -295,22 +340,40 @@
       <h1>Ausonia — Generatore annunci Vinted</h1>
       <p>Compila una volta, incolla su Vinted</p>
     </div>
-    <span class="status" id="status">Connessione al database...</span>
+    <div class="hdr-right">
+      <span class="user-email" id="userEmail"></span>
+      <button class="linkbtn" id="logoutBtn" type="button" hidden>Esci</button>
+      <span class="status" id="status">Caricamento...</span>
+    </div>
   </header>
 
+  <!-- Schermata di accesso -->
+  <div class="card login-card" id="loginBox" hidden>
+    <h2>Accedi</h2>
+    <p>Per usare l'app accedi con l'account Google del negozio.<br>Basta farlo una volta su ogni telefono: poi resta collegato.</p>
+    <button class="primary" id="loginBtn" type="button">Accedi con Google</button>
+    <p class="login-err" id="loginErr"></p>
+  </div>
+
+  <div id="appBox" hidden>
   <div class="grid">
     <div class="card">
-      <h2>Dati del capo</h2>
+      <div class="card-head">
+        <h2>Dati del capo</h2>
+        <button class="ghost" id="newBtn" type="button">🆕 Nuovo annuncio</button>
+      </div>
 
-      <label style="margin-bottom:2px;">Riconoscimento automatico da foto</label>
+      <label style="margin-top:0;margin-bottom:2px;">Riconoscimento automatico da foto</label>
       <div class="photo-box">
         <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden>
-        <input type="file" id="galleryInput" accept="image/*" hidden>
+        <input type="file" id="galleryInput" accept="image/*" multiple hidden>
         <button class="ghost" id="cameraBtn" type="button">📷 Scatta foto</button>
         <button class="ghost" id="galleryBtn" type="button">🖼️ Carica da galleria</button>
-        <span id="photoStatus" class="photo-status"></span>
+        <button class="ghost accent" id="analyzeBtn" type="button" hidden>✨ Analizza foto</button>
       </div>
-      <img id="photoPreview" style="display:none;">
+      <div class="thumbs" id="thumbs"></div>
+      <div id="photoStatus" class="photo-status">Fino a 3 foto dello stesso capo (es. davanti + etichetta), poi premi "Analizza".</div>
+      <div class="ai-hint" id="aiHint" hidden></div>
 
       <label>Tipo di capo</label>
       <select id="tipoSelect">
@@ -331,7 +394,7 @@
         <option>Altro capo intimo</option>
         <option value="__custom__">✏️ Altro (scrivi tu)</option>
       </select>
-      <input type="text" id="tipoCustom" placeholder="Scrivi il tipo di capo" style="display:none; margin-top:8px;">
+      <input type="text" id="tipoCustom" placeholder="Scrivi il tipo di capo" style="margin-top:8px;" hidden>
 
       <div class="row2">
         <div>
@@ -351,9 +414,11 @@
         </div>
         <div>
           <label>Prezzo (€)</label>
-          <input id="prezzo" type="text" placeholder="es. 12">
+          <input id="prezzo" type="text" inputmode="decimal" placeholder="es. 12">
         </div>
       </div>
+      <div class="hint">Più varianti? Scrivi più taglie o colori separati da virgola (es. <i>2°, 3°, 4°</i>): verrà creato un annuncio per ognuna.</div>
+      <label class="inline"><input type="checkbox" id="includePrice"> Scrivi il prezzo anche nella descrizione</label>
 
       <label>Materiale</label>
       <input id="materiale" type="text" placeholder="es. pizzo, cotone, microfibra...">
@@ -376,7 +441,7 @@
         <button class="ghost" id="savePreset" type="button">＋ Salva marca/materiale come preset</button>
       </div>
 
-      <button class="primary" id="genera" type="button" disabled>Genera annuncio</button>
+      <button class="primary" id="genera" type="button">Genera annuncio</button>
     </div>
 
     <div class="card">
@@ -385,16 +450,33 @@
         <div class="placeholder">Compila i campi a sinistra e premi "Genera annuncio": qui comparirà il titolo e la descrizione pronti da incollare su Vinted.</div>
       </div>
 
-      <div class="history" id="historyBox" style="display:none;">
-        <h2>Ultimi annunci generati</h2>
-        <input type="text" id="historySearch" placeholder="🔍 Cerca per marca, tipo, colore...">
+      <div class="history" id="historyBox" hidden>
+        <div class="card-head">
+          <h2>Ultimi annunci generati</h2>
+          <button class="ghost" id="exportBtn" type="button">⬇️ Esporta CSV</button>
+        </div>
+        <input type="text" id="historySearch" placeholder="🔍 Cerca per marca, tipo, colore, materiale...">
         <div id="historyList"></div>
       </div>
+
+      <details class="settings">
+        <summary>⚙️ Impostazioni testi</summary>
+        <label>Frase finale della descrizione</label>
+        <textarea id="setChiusura" rows="2"></textarea>
+        <label>Hashtag fissi</label>
+        <input id="setHashtag" type="text">
+        <div class="hint">Gli hashtag di tipo, colore, marca e materiale vengono aggiunti in automatico. "#nuovo" o "#secondamano" vengono scelti in base alla condizione.</div>
+        <div class="copy-row">
+          <button class="ghost" id="saveSettings" type="button">Salva impostazioni</button>
+          <button class="ghost" id="resetSettings" type="button">Ripristina predefinite</button>
+        </div>
+      </details>
     </div>
   </div>
 
   <div class="note">
-    Nota: Vinted non offre un'API pubblica per pubblicare annunci automaticamente, quindi il caricamento foto e la conferma finale vanno sempre fatti a mano sull'app/sito — questo strumento serve a farti risparmiare tempo solo sulla parte di scrittura, che è quella più lenta. Preset e cronologia sono condivisi tra tutti i dispositivi che aprono questa pagina.
+    Nota: Vinted non offre un'API pubblica per pubblicare annunci automaticamente, quindi il caricamento foto e la conferma finale vanno sempre fatti a mano sull'app/sito — questo strumento serve a farti risparmiare tempo solo sulla parte di scrittura, che è quella più lenta. Preset, impostazioni e cronologia sono condivisi tra tutti i dispositivi collegati con un account autorizzato, e funzionano anche offline (si sincronizzano quando torna la rete).
+  </div>
   </div>
 </div>
 
@@ -403,8 +485,16 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-  getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove
+  getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect,
+  getRedirectResult, onAuthStateChanged, signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  initializeFirestore, getFirestore, persistentLocalCache, persistentMultipleTabManager,
+  doc, collection, getDoc, getDocs, setDoc, updateDoc, deleteDoc,
+  arrayUnion, arrayRemove, deleteField, query, orderBy, limit, writeBatch
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// ===================== Configurazione =====================
 
 const firebaseConfig = {
   apiKey: "AIzaSyBVxhMya5NKtlccr3T2YhM-lqwqKEDwwlY",
@@ -415,15 +505,42 @@ const firebaseConfig = {
   appId: "1:42803211934:web:d67d8d5957ba5ef320558f"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const docRef = doc(db, "shops", "ausonia");
-
-// Sostituisci con l'URL del tuo Worker Cloudflare dopo averlo pubblicato
 const WORKER_URL = "https://hidden-frost-22ef.palmitessa-paolo.workers.dev";
-const APP_SECRET = "glYH-P70MY2BZ3OlZZRSOtzymjICsbK745CNM_blOzk";
+const MAX_PHOTOS = 3;
+const MAX_VARIANTS = 12;
+const HISTORY_LOAD_LIMIT = 300;
+const TITLE_SOFT_LIMIT = 60;
+
+const DEFAULT_SETTINGS = {
+  chiusura: "🙋‍♀️ Scrivimi per altre taglie/colori disponibili in negozio!",
+  hashtagBase: "#intimo #lingerie #ausonia #vinted",
+  includePrice: true
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+let db;
+try{
+  // Cache locale: l'app funziona anche senza rete e sincronizza dopo
+  db = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) });
+}catch(e){
+  console.warn('Cache offline non disponibile, uso Firestore normale', e);
+  db = getFirestore(app);
+}
+const docRef = doc(db, "shops", "ausonia");
+const histCol = collection(db, "shops", "ausonia", "history");
 
 const $ = id => document.getElementById(id);
+const val = id => $(id).value.trim();
+
+let currentUser = null;
+let dbReady = false;
+let cache = { presets: [], history: [], settings: { ...DEFAULT_SETTINGS } };
+let photos = [];          // [{file, url}] foto del capo corrente
+let aiSuggestion = {};    // {titolo, categoria} dall'ultima analisi
+let currentListings = []; // annunci mostrati in anteprima
+
+// ===================== Utilità =====================
 
 function autoGrow(el){
   el.style.height = 'auto';
@@ -431,11 +548,13 @@ function autoGrow(el){
 }
 $('dettagli').addEventListener('input', function(){ autoGrow(this); });
 
-function toast(msg){
+let toastTimer;
+function toast(msg, ms = 1800){
   const t = $('toast');
   t.textContent = msg;
   t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 1800);
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), ms);
 }
 
 function setStatus(text, cls){
@@ -444,176 +563,98 @@ function setStatus(text, cls){
   s.className = 'status' + (cls ? ' ' + cls : '');
 }
 
-function copyText(text){
-  navigator.clipboard.writeText(text).then(()=>toast('Copiato negli appunti'))
-    .catch(()=>toast('Impossibile copiare'));
+function updateStatus(){
+  if(!currentUser) return;
+  if(!navigator.onLine) setStatus('Offline · sincronizzo dopo', 'err');
+  else if(dbReady) setStatus('Connesso', 'ok');
+  else setStatus('Connessione al database...');
+}
+window.addEventListener('online', updateStatus);
+window.addEventListener('offline', updateStatus);
+
+async function writeClipboard(text){
+  try{
+    await navigator.clipboard.writeText(text);
+    return true;
+  }catch(e){
+    // Ripiego per browser/WebView vecchi
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try{ ok = document.execCommand('copy'); }catch(_){}
+    ta.remove();
+    return ok;
+  }
+}
+async function copyText(text){
+  toast(await writeClipboard(text) ? 'Copiato negli appunti' : 'Impossibile copiare');
 }
 
 function slug(s){
-  return s.toLowerCase().replace(/[^a-z0-9à-ù]+/gi,'').trim();
+  return (s || '').toLowerCase().replace(/[^a-z0-9à-ù]+/gi,'').trim();
 }
 
-function buildListing(){
-  const tipo = getTipoValue();
-  const marca = $('marca').value.trim();
-  const taglia = $('taglia').value.trim();
-  const colore = $('colore').value.trim();
-  const materiale = $('materiale').value.trim();
-  const condizione = $('condizione').value;
-  const dettagli = $('dettagli').value.trim();
-  const prezzo = $('prezzo').value.trim();
-
-  let titleParts = [];
-  if(marca) titleParts.push(marca);
-  titleParts.push(tipo);
-  if(colore) titleParts.push(colore);
-  if(taglia) titleParts.push('tg. '+taglia);
-  const title = titleParts.join(' ');
-
-  let desc = `✨ ${tipo}${marca ? ' firmato ' + marca : ''}\n\n`;
-  if(taglia) desc += `📏 Taglia: ${taglia}\n`;
-  if(colore) desc += `🎨 Colore: ${colore}\n`;
-  if(materiale) desc += `🧵 Materiale: ${materiale}\n`;
-  desc += `⭐ Condizione: ${condizione}\n`;
-  if(dettagli) desc += `📌 ${dettagli}\n`;
-  if(prezzo) desc += `\n💶 Prezzo: ${prezzo}€ (trattabile con più acquisti)\n`;
-  desc += `\n📦 Capo controllato e pulito, spedizione curata.\n🙋‍♀️ Scrivimi per altre taglie/colori disponibili in negozio!\n\n`;
-  let tags = ['#intimo','#lingerie','#ausonia','#vinted','#secondamano', '#'+slug(tipo)];
-  if(materiale) tags.push('#'+slug(materiale));
-  if(colore) tags.push('#'+slug(colore));
-  if(marca) tags.push('#'+slug(marca));
-  desc += tags.join(' ');
-
-  return {title, desc};
+function splitList(s){
+  return (s || '').split(',').map(x => x.trim()).filter(Boolean);
 }
 
-function render(title, desc){
-  $('output').innerHTML = `
-    <div class="tag">
-      <div class="tag-title">${title || '(senza titolo)'}</div>
-      <div class="tag-desc"></div>
-    </div>
-    <div class="copy-row">
-      <button class="ghost" id="copyTitle">Copia titolo</button>
-      <button class="ghost" id="copyDesc">Copia descrizione</button>
-      <button class="ghost" id="copyAll">Copia tutto</button>
-      <button class="ghost" id="shareAll">📤 Condividi</button>
-      <button class="ghost" id="duplicateBtn">🧬 Duplica per variante</button>
-    </div>
-  `;
-  $('output').querySelector('.tag-desc').textContent = desc;
-  $('copyTitle').onclick = () => copyText(title);
-  $('copyDesc').onclick = () => copyText(desc);
-  $('copyAll').onclick = () => copyText(title + '\n\n' + desc);
-  $('shareAll').onclick = () => shareListing(title, desc);
-  $('duplicateBtn').onclick = () => prepareVariant();
+function hasFields(entry){
+  return entry.fields && Object.keys(entry.fields).length > 0;
 }
 
-async function shareListing(title, desc){
-  const text = title + '\n\n' + desc;
+// ===================== Campi del modulo =====================
 
-  // Copia sempre la didascalia negli appunti come rete di sicurezza:
-  // molte app (Instagram compresa) non accettano testo pre-compilato via condivisione.
-  try{ await navigator.clipboard.writeText(text); }catch(e){}
+const TEXT_FIELDS = ['marca','taglia','colore','prezzo','materiale','dettagli','tipoCustom'];
 
-  if(navigator.share){
-    if(currentPhotoFile && navigator.canShare && navigator.canShare({ files: [currentPhotoFile] })){
-      try{
-        await navigator.share({ files: [currentPhotoFile], title: title });
-        toast('Foto condivisa, didascalia già copiata: incollala dove serve');
-        return;
-      }catch(e){ /* utente ha annullato o app non supporta i file: proseguo col solo testo */ }
-    }
-    try{
-      await navigator.share({ title: title, text: text });
-      return;
-    }catch(e){ /* utente ha annullato */ }
+// Ricorda quali campi hai scritto tu: l'analisi foto non li sovrascrive
+TEXT_FIELDS.forEach(id => {
+  $(id).addEventListener('input', e => { e.target.dataset.src = e.target.value.trim() ? 'user' : ''; });
+});
+
+function getTipoValue(){
+  const sel = $('tipoSelect').value;
+  return sel === '__custom__' ? val('tipoCustom') : sel;
+}
+
+function setTipoValue(v){
+  const opts = Array.from($('tipoSelect').options).map(o => o.value);
+  if(opts.includes(v)){
+    $('tipoSelect').value = v;
+    $('tipoCustom').hidden = true;
   } else {
-    toast('Condivisione non supportata: testo copiato negli appunti');
+    $('tipoSelect').value = '__custom__';
+    $('tipoCustom').hidden = false;
+    $('tipoCustom').value = v;
   }
 }
 
-function prepareVariant(fields){
-  if(fields){
-    if(fields.tipo) setTipoValue(fields.tipo);
-    $('marca').value = fields.marca || '';
-    $('materiale').value = fields.materiale || '';
-    if(fields.condizione) $('condizione').value = fields.condizione;
-    $('dettagli').value = fields.dettagli || '';
-    autoGrow($('dettagli'));
-    $('prezzo').value = fields.prezzo || '';
+$('tipoSelect').addEventListener('change', () => {
+  $('tipoSelect').dataset.src = 'user';
+  if($('tipoSelect').value === '__custom__'){
+    $('tipoCustom').hidden = false;
+    $('tipoCustom').focus();
+  } else {
+    $('tipoCustom').hidden = true;
   }
-  $('colore').value = '';
-  $('taglia').value = '';
-  $('output').innerHTML = '<div class="placeholder">Modifica colore/taglia e premi di nuovo "Genera annuncio" per creare la variante.</div>';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  setTimeout(() => $('colore').focus(), 300);
-  toast('Pronto per una nuova variante: modifica colore/taglia');
+});
+
+function readForm(){
+  return {
+    tipo: getTipoValue(),
+    marca: val('marca'),
+    taglia: val('taglia'),
+    colore: val('colore'),
+    prezzo: val('prezzo'),
+    materiale: val('materiale'),
+    condizione: $('condizione').value,
+    dettagli: val('dettagli')
+  };
 }
 
-function renderHistory(history){
-  if(!history || history.length === 0){ $('historyBox').style.display = 'none'; return; }
-  $('historyBox').style.display = 'block';
-
-  const query = ($('historySearch').value || '').trim().toLowerCase();
-  let items = [...history].sort((a,b)=> b.ts - a.ts);
-  if(query){
-    items = items.filter(e => e.title.toLowerCase().includes(query));
-  }
-  items = items.slice(0, query ? 25 : 8);
-
-  const list = $('historyList');
-  list.innerHTML = '';
-
-  if(items.length === 0){
-    list.innerHTML = '<div class="placeholder">Nessun annuncio trovato</div>';
-    return;
-  }
-
-  items.forEach(entry => {
-    const row = document.createElement('div');
-    row.className = 'hist-item';
-
-    const b = document.createElement('b');
-    b.textContent = entry.title;
-
-    const meta = document.createElement('div');
-    meta.className = 'meta';
-    meta.textContent = entry.date;
-
-    const actions = document.createElement('div');
-    actions.className = 'hist-actions';
-
-    const resumeBtn = document.createElement('button');
-    resumeBtn.type = 'button';
-    resumeBtn.textContent = '↺ Riprendi';
-    resumeBtn.onclick = () => resumeListing(entry);
-
-    const dupBtn = document.createElement('button');
-    dupBtn.type = 'button';
-    dupBtn.textContent = '🧬 Duplica';
-    dupBtn.onclick = () => prepareVariant(entry.fields || {});
-
-    const delBtn = document.createElement('button');
-    delBtn.type = 'button';
-    delBtn.className = 'danger';
-    delBtn.textContent = '✕ Elimina';
-    delBtn.onclick = () => deleteHistoryItem(entry);
-
-    actions.appendChild(resumeBtn);
-    actions.appendChild(dupBtn);
-    actions.appendChild(delBtn);
-    row.appendChild(b);
-    row.appendChild(meta);
-    row.appendChild(actions);
-    list.appendChild(row);
-  });
-}
-
-$('historySearch').addEventListener('input', () => renderHistory(cache.history));
-
-function resumeListing(entry){
-  const f = entry.fields || {};
+function fillForm(f){
   if(f.tipo) setTipoValue(f.tipo);
   $('marca').value = f.marca || '';
   $('taglia').value = f.taglia || '';
@@ -623,22 +664,319 @@ function resumeListing(entry){
   if(f.condizione) $('condizione').value = f.condizione;
   $('dettagli').value = f.dettagli || '';
   autoGrow($('dettagli'));
-  render(entry.title, entry.desc);
-  toast('Annuncio ripreso, puoi modificarlo');
+  // I valori ripresi contano come "scritti da te"
+  [...TEXT_FIELDS, 'tipoSelect'].forEach(id => { $(id).dataset.src = $(id).value ? 'user' : ''; });
+}
+
+function showPlaceholder(text){
+  currentListings = [];
+  $('output').innerHTML = '';
+  const p = document.createElement('div');
+  p.className = 'placeholder';
+  p.textContent = text;
+  $('output').appendChild(p);
+}
+
+function newListing(){
+  $('tipoSelect').selectedIndex = 0;
+  $('tipoCustom').hidden = true;
+  [...TEXT_FIELDS].forEach(id => { $(id).value = ''; });
+  $('condizione').selectedIndex = 0;
+  [...TEXT_FIELDS, 'tipoSelect'].forEach(id => { $(id).dataset.src = ''; });
+  autoGrow($('dettagli'));
+  clearPhotos();
+  aiSuggestion = {};
+  renderAiHint();
+  setPhotoStatus('Fino a 3 foto dello stesso capo (es. davanti + etichetta), poi premi "Analizza".');
+  showPlaceholder('Compila i campi a sinistra e premi "Genera annuncio": qui comparirà il titolo e la descrizione pronti da incollare su Vinted.');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+$('newBtn').onclick = newListing;
+
+// ===================== Testo dell'annuncio =====================
+
+function buildListing(f, s){
+  const isNew = (f.condizione || '').startsWith('Nuovo');
+
+  const title = [f.marca, f.tipo, f.colore, f.taglia ? 'tg. ' + f.taglia : '']
+    .filter(Boolean).join(' ');
+
+  let desc = `✨ ${f.tipo}${f.marca ? ' firmato ' + f.marca : ''}\n\n`;
+  if(f.taglia) desc += `📏 Taglia: ${f.taglia}\n`;
+  if(f.colore) desc += `🎨 Colore: ${f.colore}\n`;
+  if(f.materiale) desc += `🧵 Materiale: ${f.materiale}\n`;
+  desc += `⭐ Condizione: ${f.condizione}\n`;
+  if(f.dettagli) desc += `📌 ${f.dettagli}\n`;
+  if(f.prezzo && s.includePrice){
+    desc += `\n💶 Prezzo: ${f.prezzo.replace(/€/g,'').trim()}€ (trattabile con più acquisti)\n`;
+  }
+  desc += isNew
+    ? `\n🏷️ Capo nuovo, mai indossato. Spedizione curata.\n`
+    : `\n📦 Capo controllato e pulito, spedizione curata.\n`;
+  if((s.chiusura || '').trim()) desc += s.chiusura.trim() + '\n';
+
+  const tags = new Set();
+  (s.hashtagBase || '').split(/\s+/).filter(Boolean).forEach(t => {
+    const clean = slug(t.replace(/^#/, ''));
+    if(clean) tags.add('#' + clean);
+  });
+  tags.delete(isNew ? '#secondamano' : '#nuovo');
+  tags.add(isNew ? '#nuovo' : '#secondamano');
+  [f.tipo, f.colore, f.marca].forEach(x => { const t = slug(x); if(t) tags.add('#' + t); });
+  if(f.materiale && f.materiale.length <= 20 && !/\d/.test(f.materiale)){
+    const t = slug(f.materiale); if(t) tags.add('#' + t);
+  }
+  desc += '\n' + [...tags].join(' ');
+
+  return { title, desc };
+}
+
+function expandVariants(f){
+  const taglie = splitList(f.taglia);
+  const colori = splitList(f.colore);
+  const T = taglie.length ? taglie : [''];
+  const C = colori.length ? colori : [''];
+  const out = [];
+  for(const c of C) for(const t of T) out.push({ ...f, taglia: t, colore: c });
+  return out;
+}
+
+// ===================== Anteprima =====================
+
+function el(tag, cls, text){
+  const e = document.createElement(tag);
+  if(cls) e.className = cls;
+  if(text !== undefined) e.textContent = text;
+  return e;
+}
+function btn(text, onclick, cls = 'ghost'){
+  const b = el('button', cls, text);
+  b.type = 'button';
+  b.onclick = onclick;
+  return b;
+}
+
+function renderListings(listings){
+  currentListings = listings;
+  const out = $('output');
+  out.innerHTML = '';
+
+  if(listings.length > 1){
+    out.appendChild(el('div', 'listings-head', `${listings.length} annunci generati (uno per variante)`));
+  }
+
+  listings.forEach(listing => {
+    const box = el('div', 'listing');
+    const tag = el('div', 'tag');
+    tag.appendChild(el('div', 'tag-title', listing.title || '(senza titolo)'));
+    const len = (listing.title || '').length;
+    const count = el('div', 'title-count' + (len > TITLE_SOFT_LIMIT ? ' long' : ''),
+      len > TITLE_SOFT_LIMIT ? `${len} caratteri · un po' lungo, i titoli brevi si leggono meglio` : `${len} caratteri`);
+    tag.appendChild(count);
+    if(listing.categoria) tag.appendChild(el('div', 'tag-cat', '📂 Categoria Vinted suggerita: ' + listing.categoria));
+    tag.appendChild(el('div', 'tag-desc', listing.desc));
+    box.appendChild(tag);
+
+    if(listing.aiTitle && listing.aiTitle !== listing.title){
+      const ai = el('div', 'ai-title');
+      ai.appendChild(document.createTextNode('💡 Titolo suggerito dall\'AI: '));
+      ai.appendChild(el('b', '', listing.aiTitle));
+      const row = el('div', 'copy-row');
+      row.style.marginTop = '8px';
+      row.appendChild(btn('Usa questo titolo', () => useAiTitle(listing)));
+      ai.appendChild(row);
+      box.appendChild(ai);
+    }
+
+    const row = el('div', 'copy-row');
+    row.appendChild(btn('Copia titolo', () => copyText(listing.title)));
+    row.appendChild(btn('Copia descrizione', () => copyText(listing.desc)));
+    row.appendChild(btn('Copia tutto', () => copyText(listing.title + '\n\n' + listing.desc)));
+    row.appendChild(btn('📤 Condividi', () => shareListing(listing.title, listing.desc)));
+    box.appendChild(row);
+    out.appendChild(box);
+  });
+
+  const row = el('div', 'copy-row');
+  row.appendChild(btn('🧬 Duplica per variante', () => prepareVariant(null, false)));
+  out.appendChild(row);
+}
+
+function useAiTitle(listing){
+  listing.title = listing.aiTitle;
+  const h = cache.history.find(x => x.id === listing.id);
+  if(h) h.title = listing.title;
+  if(listing.id){
+    updateDoc(doc(histCol, listing.id), { title: listing.title })
+      .catch(e => { console.error(e); toast('Titolo cambiato, ma non aggiornato in cronologia'); });
+  }
+  renderListings(currentListings);
+  renderHistory();
+  toast('Titolo aggiornato');
+}
+
+async function shareListing(title, desc){
+  const text = title + '\n\n' + desc;
+
+  // Copia sempre la didascalia negli appunti come rete di sicurezza:
+  // molte app (Instagram compresa) non accettano testo pre-compilato via condivisione.
+  await writeClipboard(text);
+
+  if(!navigator.share){
+    toast('Condivisione non supportata: testo copiato negli appunti');
+    return;
+  }
+  const files = photos.map(p => p.file);
+  if(files.length && navigator.canShare && navigator.canShare({ files })){
+    try{
+      await navigator.share({ files, title });
+      toast('Foto condivise, didascalia già copiata: incollala dove serve', 2600);
+      return;
+    }catch(e){
+      if(e.name === 'AbortError') return; // annullato dall'utente
+    }
+  }
+  try{ await navigator.share({ title, text }); }catch(e){ /* annullato */ }
+}
+
+function prepareVariant(fields, fromHistory){
+  if(fields) fillForm(fields);
+  if(fromHistory){ clearPhotos(); aiSuggestion = {}; renderAiHint(); }
+  $('colore').value = '';
+  $('taglia').value = '';
+  $('colore').dataset.src = '';
+  $('taglia').dataset.src = '';
+  showPlaceholder('Modifica colore/taglia e premi di nuovo "Genera annuncio" per creare la variante.');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(() => $('colore').focus(), 300);
+  toast('Pronto per una nuova variante: modifica colore/taglia');
+}
+
+// ===================== Genera =====================
+
+$('genera').onclick = () => {
+  const base = readForm();
+  if(!base.tipo){ toast('Scrivi il tipo di capo'); $('tipoCustom').focus(); return; }
+
+  const variants = expandVariants(base);
+  if(variants.length > MAX_VARIANTS){
+    toast(`Troppe varianti (${variants.length}): massimo ${MAX_VARIANTS} per volta`, 2600);
+    return;
+  }
+
+  const now = Date.now();
+  const date = new Date().toLocaleString('it-IT');
+  const listings = variants.map((f, i) => {
+    const { title, desc } = buildListing(f, cache.settings);
+    const entry = { title, desc, date, ts: now + i, fields: f };
+    if(aiSuggestion.categoria) entry.categoria = aiSuggestion.categoria;
+    const ref = doc(histCol);
+    // Non aspetto la risposta: offline la scrittura resta in coda e parte quando torna la rete
+    setDoc(ref, entry).catch(e => { console.error(e); toast('Annuncio generato, ma non salvato in cronologia'); });
+    const item = { id: ref.id, ...entry };
+    cache.history.unshift(item);
+    return { ...item, aiTitle: variants.length === 1 ? (aiSuggestion.titolo || '') : '' };
+  });
+
+  renderListings(listings);
+  renderHistory();
+  if(window.innerWidth <= 760) $('output').scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
+// ===================== Cronologia =====================
+
+function searchText(e){
+  return [e.title, e.desc, e.categoria, ...Object.values(e.fields || {})].join(' ').toLowerCase();
+}
+
+function renderHistory(){
+  const all = cache.history;
+  if(!all.length){ $('historyBox').hidden = true; return; }
+  $('historyBox').hidden = false;
+
+  const q = val('historySearch').toLowerCase();
+  let items = q ? all.filter(e => searchText(e).includes(q)) : all;
+  items = items.slice(0, q ? 50 : 8);
+
+  const list = $('historyList');
+  list.innerHTML = '';
+  if(items.length === 0){
+    list.appendChild(el('div', 'placeholder', 'Nessun annuncio trovato'));
+    return;
+  }
+
+  items.forEach(entry => {
+    const row = el('div', 'hist-item');
+    row.appendChild(el('b', '', entry.title));
+    row.appendChild(el('div', 'meta', entry.date || ''));
+    const actions = el('div', 'hist-actions');
+    actions.appendChild(btn('↺ Riprendi', () => resumeListing(entry), ''));
+    if(hasFields(entry)){
+      actions.appendChild(btn('🧬 Duplica', () => prepareVariant(entry.fields, true), ''));
+    }
+    actions.appendChild(btn('✕ Elimina', () => deleteHistoryItem(entry), 'danger'));
+    row.appendChild(actions);
+    list.appendChild(row);
+  });
+}
+
+$('historySearch').addEventListener('input', renderHistory);
+
+function resumeListing(entry){
+  if(hasFields(entry)){
+    fillForm(entry.fields);
+    toast('Annuncio ripreso, puoi modificarlo');
+  } else {
+    toast('Annuncio vecchio: ripreso solo il testo', 2400);
+  }
+  // Le foto del capo precedente non c'entrano con questo annuncio
+  clearPhotos();
+  aiSuggestion = {};
+  renderAiHint();
+  renderListings([{ ...entry, aiTitle: '' }]);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-async function deleteHistoryItem(entry){
+function deleteHistoryItem(entry){
+  if(!confirm(`Eliminare dalla cronologia "${entry.title}"?`)) return;
+  cache.history = cache.history.filter(h => h.id !== entry.id);
+  renderHistory();
+  deleteDoc(doc(histCol, entry.id))
+    .then(() => toast('Eliminato dalla cronologia'))
+    .catch(e => { console.error(e); toast('Errore durante l\'eliminazione'); });
+}
+
+async function exportCsv(){
+  toast('Preparo il file...');
+  let rows;
   try{
-    await updateDoc(docRef, { history: arrayRemove(entry) });
-    cache.history = cache.history.filter(h => h.ts !== entry.ts);
-    renderHistory(cache.history);
-    toast('Eliminato dalla cronologia');
+    const snap = await getDocs(query(histCol, orderBy('ts', 'desc')));
+    rows = snap.docs.map(d => d.data());
   }catch(e){
     console.error(e);
-    toast('Errore durante l\'eliminazione');
+    rows = cache.history;
   }
+  const head = ['Data','Titolo','Tipo','Marca','Taglia','Colore','Materiale','Condizione','Prezzo','Categoria','Dettagli','Descrizione'];
+  const esc = x => '"' + String(x ?? '').replace(/"/g, '""') + '"';
+  const lines = [head.map(esc).join(';')];
+  rows.forEach(r => {
+    const f = r.fields || {};
+    lines.push([r.date, r.title, f.tipo, f.marca, f.taglia, f.colore, f.materiale,
+      f.condizione, f.prezzo, r.categoria, f.dettagli, r.desc].map(esc).join(';'));
+  });
+  const blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `ausonia-annunci-${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  toast(`Esportati ${rows.length} annunci`);
 }
+$('exportBtn').onclick = exportCsv;
+
+// ===================== Preset =====================
 
 function renderPresets(presets){
   const box = $('presets');
@@ -648,78 +986,140 @@ function renderPresets(presets){
   }
   box.innerHTML = '';
   presets.forEach(data => {
-    const chip = document.createElement('span');
-    chip.className = 'chip';
-
-    const label = document.createElement('span');
-    label.textContent = `${data.marca}${data.materiale ? ' · ' + data.materiale : ''}`;
+    const chip = el('span', 'chip');
+    const label = el('span', '', `${data.marca}${data.materiale ? ' · ' + data.materiale : ''}`);
     label.onclick = () => {
       $('marca').value = data.marca || '';
       $('materiale').value = data.materiale || '';
+      $('marca').dataset.src = data.marca ? 'user' : '';
+      $('materiale').dataset.src = data.materiale ? 'user' : '';
     };
-
-    const removeBtn = document.createElement('span');
-    removeBtn.textContent = ' ✕';
-    removeBtn.className = 'chip-remove';
-    removeBtn.onclick = async (e) => {
+    const removeBtn = el('span', 'chip-remove', ' ✕');
+    removeBtn.onclick = (e) => {
       e.stopPropagation();
       if(!confirm(`Eliminare il preset "${label.textContent}"?`)) return;
-      try{
-        await updateDoc(docRef, { presets: arrayRemove(data) });
-        cache.presets = cache.presets.filter(p => p.ts !== data.ts);
-        renderPresets(cache.presets);
-        toast('Preset eliminato');
-      }catch(err){
-        console.error(err);
-        toast('Errore durante l\'eliminazione del preset');
-      }
+      cache.presets = cache.presets.filter(p => p.ts !== data.ts);
+      renderPresets(cache.presets);
+      updateDoc(docRef, { presets: arrayRemove(data) })
+        .then(() => toast('Preset eliminato'))
+        .catch(err => { console.error(err); toast('Errore durante l\'eliminazione del preset'); });
     };
-
     chip.appendChild(label);
     chip.appendChild(removeBtn);
     box.appendChild(chip);
   });
 }
 
+$('savePreset').onclick = () => {
+  const marca = val('marca');
+  const materiale = val('materiale');
+  if(!marca && !materiale){ toast('Inserisci almeno marca o materiale'); return; }
+  if(cache.presets.some(p => p.marca === marca && p.materiale === materiale)){ toast('Preset già salvato'); return; }
+  const entry = { marca, materiale, ts: Date.now() };
+  cache.presets.push(entry);
+  renderPresets(cache.presets);
+  toast('Preset salvato');
+  updateDoc(docRef, { presets: arrayUnion(entry) })
+    .catch(e => { console.error(e); toast('Errore salvataggio preset'); });
+};
+
+// ===================== Impostazioni testi =====================
+
+function renderSettings(){
+  $('setChiusura').value = cache.settings.chiusura;
+  $('setHashtag').value = cache.settings.hashtagBase;
+  $('includePrice').checked = !!cache.settings.includePrice;
+}
+
+function saveSettings(patch, msg = 'Impostazioni salvate'){
+  Object.assign(cache.settings, patch);
+  renderSettings();
+  toast(msg);
+  setDoc(docRef, { settings: cache.settings }, { merge: true })
+    .catch(e => { console.error(e); toast('Errore salvataggio impostazioni'); });
+}
+
+$('includePrice').onchange = () => saveSettings(
+  { includePrice: $('includePrice').checked },
+  $('includePrice').checked ? 'Il prezzo verrà scritto nella descrizione' : 'Il prezzo non verrà scritto nella descrizione'
+);
+$('saveSettings').onclick = () => saveSettings({ chiusura: $('setChiusura').value, hashtagBase: $('setHashtag').value });
+$('resetSettings').onclick = () => {
+  if(!confirm('Ripristinare frase finale e hashtag predefiniti?')) return;
+  saveSettings({ chiusura: DEFAULT_SETTINGS.chiusura, hashtagBase: DEFAULT_SETTINGS.hashtagBase }, 'Impostazioni ripristinate');
+};
+
+// ===================== Foto e analisi AI =====================
+
 function setPhotoStatus(text, cls){
-  const el = $('photoStatus');
-  el.textContent = text;
-  el.className = 'photo-status' + (cls ? ' ' + cls : '');
+  const s = $('photoStatus');
+  s.textContent = text;
+  s.className = 'photo-status' + (cls ? ' ' + cls : '');
 }
 
-function getTipoValue(){
-  const sel = $('tipoSelect').value;
-  return sel === '__custom__' ? $('tipoCustom').value.trim() : sel;
-}
-
-function setTipoValue(val){
-  const opts = Array.from($('tipoSelect').options).map(o => o.value);
-  if(opts.includes(val)){
-    $('tipoSelect').value = val;
-    $('tipoCustom').style.display = 'none';
-  } else {
-    $('tipoSelect').value = '__custom__';
-    $('tipoCustom').style.display = 'block';
-    $('tipoCustom').value = val;
-  }
-}
-
-$('tipoSelect').addEventListener('change', () => {
-  if($('tipoSelect').value === '__custom__'){
-    $('tipoCustom').style.display = 'block';
-    $('tipoCustom').focus();
-  } else {
-    $('tipoCustom').style.display = 'none';
-  }
-});
-
-function fileToBase64(file){
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result.split(',')[1]);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
+function renderThumbs(){
+  const box = $('thumbs');
+  box.innerHTML = '';
+  photos.forEach((p, i) => {
+    const t = el('div', 'thumb');
+    const img = document.createElement('img');
+    img.src = p.url;
+    img.alt = 'Foto ' + (i + 1);
+    t.appendChild(img);
+    const x = btn('✕', () => removePhoto(i), '');
+    x.title = 'Togli questa foto';
+    t.appendChild(x);
+    box.appendChild(t);
   });
+  $('analyzeBtn').hidden = photos.length === 0;
+  $('analyzeBtn').textContent = photos.length > 1 ? `✨ Analizza ${photos.length} foto` : '✨ Analizza foto';
+  const full = photos.length >= MAX_PHOTOS;
+  $('cameraBtn').disabled = full;
+  $('galleryBtn').disabled = full;
+}
+
+function addPhotos(files){
+  let added = 0;
+  for(const f of files){
+    if(!f || !f.type.startsWith('image/')) continue;
+    if(photos.length >= MAX_PHOTOS){ toast(`Massimo ${MAX_PHOTOS} foto per capo`); break; }
+    photos.push({ file: f, url: URL.createObjectURL(f) });
+    added++;
+  }
+  renderThumbs();
+  if(added){
+    setPhotoStatus(photos.length < MAX_PHOTOS
+      ? `${photos.length} foto. Puoi aggiungerne un'altra (es. etichetta) o premere "Analizza".`
+      : `${photos.length} foto. Premi "Analizza".`);
+  }
+}
+
+function removePhoto(i){
+  URL.revokeObjectURL(photos[i].url);
+  photos.splice(i, 1);
+  renderThumbs();
+}
+
+function clearPhotos(){
+  photos.forEach(p => URL.revokeObjectURL(p.url));
+  photos = [];
+  renderThumbs();
+}
+
+function renderAiHint(){
+  const h = $('aiHint');
+  if(!aiSuggestion.categoria && !aiSuggestion.titolo){ h.hidden = true; return; }
+  h.hidden = false;
+  h.innerHTML = '';
+  if(aiSuggestion.categoria){
+    h.appendChild(document.createTextNode('📂 Categoria Vinted: '));
+    h.appendChild(el('b', '', aiSuggestion.categoria));
+    h.appendChild(document.createElement('br'));
+  }
+  if(aiSuggestion.titolo){
+    h.appendChild(document.createTextNode('💡 Titolo suggerito: '));
+    h.appendChild(el('b', '', aiSuggestion.titolo));
+  }
 }
 
 // Ridimensiona/comprime la foto prima dell'invio: evita errori con foto pesanti
@@ -731,18 +1131,13 @@ function compressImage(file, maxDim = 1280, quality = 0.82){
     img.onload = () => {
       URL.revokeObjectURL(url);
       let { width, height } = img;
-      if(width > height && width > maxDim){
-        height = Math.round(height * (maxDim / width));
-        width = maxDim;
-      } else if(height > maxDim){
-        width = Math.round(width * (maxDim / height));
-        height = maxDim;
-      }
+      const scale = Math.min(1, maxDim / Math.max(width, height));
+      width = Math.round(width * scale);
+      height = Math.round(height * scale);
       const canvas = document.createElement('canvas');
       canvas.width = width;
       canvas.height = height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, width, height);
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
       canvas.toBlob(blob => {
         if(!blob){ reject(new Error('Compressione fallita')); return; }
         const reader = new FileReader();
@@ -751,122 +1146,194 @@ function compressImage(file, maxDim = 1280, quality = 0.82){
         reader.readAsDataURL(blob);
       }, 'image/jpeg', quality);
     };
-    img.onerror = reject;
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Formato foto non leggibile')); };
     img.src = url;
   });
 }
 
-async function analyzePhoto(file){
-  if(WORKER_URL.includes("REPLACE-WITH-YOUR-WORKER")){
-    setPhotoStatus('Worker non ancora collegato: vedi istruzioni', 'err');
-    toast('Devi prima pubblicare il Worker e inserire il suo URL nel codice');
-    return;
+function applyAiResult(r){
+  let kept = 0;
+  const setField = (id, v) => {
+    if(!v) return;
+    const f = $(id);
+    // Compilo solo i campi vuoti o già riempiti dall'AI, mai quelli scritti da te
+    if(!f.value.trim() || f.dataset.src === 'ai'){
+      f.value = v;
+      f.dataset.src = 'ai';
+    } else if(f.value.trim() !== v){
+      kept++;
+    }
+  };
+  if(r.tipo && $('tipoSelect').dataset.src !== 'user'){
+    setTipoValue(r.tipo);
+    $('tipoSelect').dataset.src = 'ai';
   }
+  setField('marca', r.marca);
+  setField('colore', r.colore);
+  setField('materiale', r.materiale);
+  setField('taglia', r.taglia_visibile);
+  setField('dettagli', r.dettagli);
+  autoGrow($('dettagli'));
+
+  aiSuggestion = { titolo: r.titolo_suggerito || '', categoria: r.categoria_vinted || '' };
+  renderAiHint();
+
+  setPhotoStatus(kept
+    ? `Campi compilati. ${kept} ${kept === 1 ? 'campo che avevi scritto è rimasto' : 'campi che avevi scritto sono rimasti'} com'era.`
+    : 'Campi compilati, controllali prima di generare', 'ok');
+}
+
+async function analyzePhotos(){
+  if(!photos.length) return;
+  if(!navigator.onLine){ setPhotoStatus('Sei offline: l\'analisi foto ha bisogno di internet', 'err'); return; }
+  $('analyzeBtn').disabled = true;
   setPhotoStatus('Analisi della foto in corso...', 'working');
   try{
-    const base64 = await compressImage(file);
+    const maxDim = photos.length > 1 ? 1024 : 1280;
+    const images = await Promise.all(photos.map(p =>
+      compressImage(p.file, maxDim).then(data => ({ data, mimeType: 'image/jpeg' }))
+    ));
+    const token = await auth.currentUser.getIdToken();
     const resp = await fetch(WORKER_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-App-Secret': APP_SECRET },
-      body: JSON.stringify({ image: base64, mimeType: 'image/jpeg' })
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ images })
     });
-    if(!resp.ok){
-      const errBody = await resp.json().catch(()=>({}));
-      throw new Error(errBody.error || ('Errore HTTP ' + resp.status));
-    }
-    const result = await resp.json();
-    if(result.error) throw new Error(result.error);
-
-    if(result.tipo) setTipoValue(result.tipo);
-    if(result.colore) $('colore').value = result.colore;
-    if(result.materiale) $('materiale').value = result.materiale;
-    if(result.dettagli){ $('dettagli').value = result.dettagli; autoGrow($('dettagli')); }
-    if(result.taglia_visibile) $('taglia').value = result.taglia_visibile;
-
-    setPhotoStatus('Campi compilati, controllali prima di generare', 'ok');
+    const result = await resp.json().catch(() => ({}));
+    if(!resp.ok || result.error) throw new Error(result.error || ('Errore HTTP ' + resp.status));
+    applyAiResult(result);
     toast('Foto analizzata');
   }catch(e){
     console.error(e);
     setPhotoStatus('Errore: ' + e.message, 'err');
     toast('Errore nell\'analisi della foto');
+  }finally{
+    $('analyzeBtn').disabled = false;
   }
-}
-
-let currentPhotoFile = null;
-
-function handlePhotoFile(file){
-  if(!file) return;
-  currentPhotoFile = file;
-  const preview = $('photoPreview');
-  preview.src = URL.createObjectURL(file);
-  preview.style.display = 'block';
-  analyzePhoto(file);
 }
 
 $('cameraBtn').onclick = () => $('cameraInput').click();
 $('galleryBtn').onclick = () => $('galleryInput').click();
-$('cameraInput').onchange = (e) => handlePhotoFile(e.target.files[0]);
-$('galleryInput').onchange = (e) => handlePhotoFile(e.target.files[0]);
+$('analyzeBtn').onclick = analyzePhotos;
+// value = '' permette di riscegliere la stessa foto
+$('cameraInput').onchange = (e) => { addPhotos([...e.target.files]); e.target.value = ''; };
+$('galleryInput').onchange = (e) => { addPhotos([...e.target.files]); e.target.value = ''; };
 
-let cache = { presets: [], history: [] };
+// ===================== Caricamento dati =====================
+
+// La vecchia cronologia era tutta dentro un solo documento (limite 1 MB):
+// la sposto una volta sola nella raccolta "history", un documento per annuncio.
+async function migrateLegacyHistory(legacy){
+  setStatus('Aggiorno la cronologia...');
+  for(let i = 0; i < legacy.length; i += 400){
+    const batch = writeBatch(db);
+    legacy.slice(i, i + 400).forEach((e, j) => {
+      batch.set(doc(histCol, `legacy-${e.ts || 0}-${i + j}`), e);
+    });
+    await batch.commit();
+  }
+  await updateDoc(docRef, { history: deleteField() });
+}
 
 async function loadData(){
+  dbReady = false;
+  updateStatus();
   try{
     const snap = await getDoc(docRef);
+    let data = {};
     if(snap.exists()){
-      cache = snap.data();
-      cache.presets = cache.presets || [];
-      cache.history = cache.history || [];
+      data = snap.data();
     } else {
-      await setDoc(docRef, { presets: [], history: [] });
-      cache = { presets: [], history: [] };
+      await setDoc(docRef, { presets: [], settings: DEFAULT_SETTINGS });
     }
+    cache.presets = data.presets || [];
+    cache.settings = { ...DEFAULT_SETTINGS, ...(data.settings || {}) };
     renderPresets(cache.presets);
-    renderHistory(cache.history);
-    setStatus('Connesso', 'ok');
-    $('genera').disabled = false;
+    renderSettings();
+
+    if(Array.isArray(data.history) && data.history.length){
+      await migrateLegacyHistory(data.history);
+    }
+
+    const hs = await getDocs(query(histCol, orderBy('ts', 'desc'), limit(HISTORY_LOAD_LIMIT)));
+    cache.history = hs.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderHistory();
+
+    dbReady = true;
+    updateStatus();
   }catch(e){
     console.error(e);
-    setStatus('Database non raggiungibile', 'err');
-    toast('Errore di connessione al database');
+    if(e.code === 'permission-denied'){
+      const em = currentUser?.email || '';
+      await signOut(auth);
+      $('loginErr').textContent = `L'account ${em} non è autorizzato. Accedi con l'account del negozio.`;
+      return;
+    }
+    setStatus(navigator.onLine ? 'Database non raggiungibile' : 'Offline', 'err');
+    renderPresets(cache.presets);
+    renderSettings();
+    toast('Database non raggiungibile: puoi comunque generare gli annunci', 2600);
   }
 }
 
-$('genera').onclick = async () => {
-  const {title, desc} = buildListing();
-  render(title, desc);
-  const fields = {
-    tipo: getTipoValue(),
-    marca: $('marca').value,
-    taglia: $('taglia').value,
-    colore: $('colore').value,
-    prezzo: $('prezzo').value,
-    materiale: $('materiale').value,
-    condizione: $('condizione').value,
-    dettagli: $('dettagli').value
-  };
-  const entry = { title, desc, date: new Date().toLocaleString('it-IT'), ts: Date.now(), fields };
+// ===================== Accesso con Google =====================
+
+function showLoginError(e){
+  console.error(e);
+  const msg = {
+    'auth/unauthorized-domain': 'Questo indirizzo non è autorizzato in Firebase (vedi la guida: "Domini autorizzati").',
+    'auth/network-request-failed': 'Nessuna connessione: per il primo accesso serve internet.',
+    'auth/operation-not-allowed': 'L\'accesso con Google non è attivo in Firebase (vedi la guida).'
+  }[e.code] || ('Accesso non riuscito (' + (e.code || e.message) + ')');
+  $('loginErr').textContent = msg;
+}
+
+$('loginBtn').onclick = async () => {
+  $('loginErr').textContent = '';
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
   try{
-    await updateDoc(docRef, { history: arrayUnion(entry) });
-    cache.history.push(entry);
-    renderHistory(cache.history);
-  }catch(e){ console.error(e); toast('Annuncio generato, ma non salvato in cronologia'); }
+    await signInWithPopup(auth, provider);
+  }catch(e){
+    if(e.code === 'auth/popup-closed-by-user' || e.code === 'auth/cancelled-popup-request') return;
+    if(e.code === 'auth/popup-blocked' || e.code === 'auth/operation-not-supported-in-this-environment'){
+      try{ await signInWithRedirect(auth, provider); }catch(e2){ showLoginError(e2); }
+      return;
+    }
+    showLoginError(e);
+  }
 };
 
-$('savePreset').onclick = async () => {
-  const marca = $('marca').value.trim();
-  const materiale = $('materiale').value.trim();
-  if(!marca && !materiale){ toast('Inserisci almeno marca o materiale'); return; }
-  const entry = { marca, materiale, ts: Date.now() };
-  try{
-    await updateDoc(docRef, { presets: arrayUnion(entry) });
-    cache.presets.push(entry);
-    renderPresets(cache.presets);
-    toast('Preset salvato');
-  }catch(e){ console.error(e); toast('Errore salvataggio preset'); }
+$('logoutBtn').onclick = async () => {
+  if(!confirm('Uscire dall\'account su questo dispositivo?')) return;
+  await signOut(auth);
 };
 
-loadData();
+getRedirectResult(auth).catch(showLoginError);
+
+onAuthStateChanged(auth, user => {
+  currentUser = user;
+  if(user){
+    $('loginBox').hidden = true;
+    $('appBox').hidden = false;
+    $('userEmail').textContent = user.email || '';
+    $('logoutBtn').hidden = false;
+    loadData();
+  } else {
+    $('appBox').hidden = true;
+    $('loginBox').hidden = false;
+    $('userEmail').textContent = '';
+    $('logoutBtn').hidden = true;
+    cache = { presets: [], history: [], settings: { ...DEFAULT_SETTINGS } };
+    setStatus('Non connesso');
+  }
+});
+
+// ===================== App installabile / offline =====================
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(e => console.warn('Service worker non registrato', e));
+}
 </script>
 </body>
 </html>
